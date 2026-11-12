@@ -1,0 +1,522 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Incapas Pro — Ferretería & Herramientas de Precisión{% endblock %}
+
+{% block contenido %}
+
+    <!-- 1. HERO SECTION (Apple Keynote / Pro Hardware Style) -->
+    <section id="inicio" class="hero-section">
+        <div class="hero-container">
+            <div class="hero-copy">
+                <div class="hero-eyebrow">
+                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
+                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                    </svg>
+                    <span>Ferretería Industrial &middot; Edición Pro</span>
+                </div>
+                <h1 class="hero-title">Potencia industrial.<br>Precisión absoluta.</h1>
+                <p class="hero-subtitle">
+                    Equipamiento eléctrico, herramientas manuales de acero forjado e insumos técnicos con inventario sincronizado en tiempo real. Explora libremente o inicia sesión cuando quieras.
+                </p>
+
+                <div class="hero-cta-group">
+                    <a href="#catalogo" class="btn-apple-primary">
+                        <span>Explorar el catálogo</span>
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                            <polyline points="12 5 19 12 12 19"></polyline>
+                        </svg>
+                    </a>
+                    <button type="button" class="btn-apple-glass" onclick="selectCategoryFromLink('Herramientas eléctricas')">
+                        <span>Ver línea eléctrica</span>
+                    </button>
+                </div>
+
+                <div class="hero-metrics">
+                    <div>
+                        <span class="hero-metric-value">{{ resumen.total }}</span>
+                        <span class="hero-metric-label">Artículos en catálogo</span>
+                    </div>
+                    <div>
+                        <span class="hero-metric-value">{{ resumen.disponibles }}</span>
+                        <span class="hero-metric-label">Con stock inmediato</span>
+                    </div>
+                    <div>
+                        <span class="hero-metric-value">{{ resumen.categorias_count }}</span>
+                        <span class="hero-metric-label">Especialidades técnicas</span>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Featured Flagship Hardware Card -->
+            <div class="hero-showcase">
+                {% if destacados %}
+                    {% with prod=destacados.0 %}
+                    <div class="hero-showcase-card">
+                        <div class="hero-showcase-top">
+                            <span class="hero-showcase-tag">Destacado Pro &middot; {{ prod.categoria }}</span>
+                            <span class="stock-pill disponible">
+                                <span class="stock-pill-dot"></span>
+                                {{ prod.stock }} disponibles
+                            </span>
+                        </div>
+                        <a href="{% url 'detalle' prod.id %}" class="hero-showcase-stage">
+                            <img src="{{ prod.imagen }}" alt="{{ prod.nombre }}" onerror="this.src='/static/catalogo/img/sin-imagen.jpg'">
+                        </a>
+                        <div class="hero-showcase-info">
+                            <h3><a href="{% url 'detalle' prod.id %}">{{ prod.nombre }}</a></h3>
+                            <p style="margin: 0; font-size: 0.85rem; color: var(--text-on-dark-muted);">
+                                Alto rendimiento para uso profesional intensivo y proyectos de ingeniería.
+                            </p>
+                            <div class="hero-showcase-meta">
+                                <div>
+                                    <span style="display: block; font-size: 0.7rem; color: var(--text-on-dark-muted); text-transform: uppercase;">Precio Contado</span>
+                                    <span class="hero-showcase-price js-price" data-price="{{ prod.precio }}">${{ prod.precio }}</span>
+                                </div>
+                                <div style="display: flex; gap: 0.5rem;">
+                                    <form method="post" action="{% url 'comprar' prod.id %}" class="js-preserve-scroll" data-toast="{{ prod.nombre }} agregado a tu bolsa">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-apple-primary" style="padding: 0.65rem 1.25rem; font-size: 0.85rem;">
+                                            Agregar a la bolsa
+                                        </button>
+                                    </form>
+                                    <a href="{% url 'detalle' prod.id %}" class="btn-apple-glass" style="padding: 0.65rem 1rem; font-size: 0.85rem;">
+                                        Ver ficha
+                                    </a>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    {% endwith %}
+                {% endif %}
+            </div>
+        </div>
+    </section>
+
+    <!-- 2. BENTO GRID SHOWCASE (Apple Store Editorial Highlights) -->
+    <section id="destacados" class="section-container">
+        <div class="section-headline">
+            <h2>El ecosistema Incapas. <span>Diseñado para cada etapa de tu obra.</span></h2>
+        </div>
+
+        <div class="bento-grid">
+            <!-- Large Dark Card -->
+            <div class="bento-card bento-span-7" onclick="selectCategoryFromLink('Herramientas eléctricas')">
+                <div>
+                    <span class="bento-eyebrow">Ingeniería de Alto Torque</span>
+                    <h3>Herramientas Eléctricas Pro.</h3>
+                    <p>Taladros percutores, esmeriles angulares, sierras circulares y lijadoras orbitales diseñadas para máxima precisión y durabilidad continua.</p>
+                </div>
+                <div class="bento-action">
+                    <span>Explorar línea eléctrica</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Live Inventory Summary Bento Card -->
+            <div class="bento-card bento-span-5" onclick="document.getElementById('catalogo').scrollIntoView({behavior: 'smooth'})">
+                <div>
+                    <span class="bento-eyebrow">Sincronización SQLite</span>
+                    <h3>Inventario en Tiempo Real.</h3>
+                    <p>Consulta disponibilidad exacta al instante antes de comprar o retirar en tienda.</p>
+                    <div class="bento-stat-grid">
+                        <div class="bento-stat-box">
+                            <strong>{{ resumen.total }}</strong>
+                            <span>Totales</span>
+                        </div>
+                        <div class="bento-stat-box">
+                            <strong style="color: var(--status-green-dark);">{{ resumen.disponibles }}</strong>
+                            <span>En Stock</span>
+                        </div>
+                        <div class="bento-stat-box">
+                            <strong style="color: var(--status-red);">{{ resumen.sin_stock }}</strong>
+                            <span>Agotados</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="bento-action">
+                    <span>Ver todos los artículos</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="9 18 15 12 9 6"></polyline>
+                    </svg>
+                </div>
+            </div>
+
+            <!-- Secondary Bento Row -->
+            <div class="bento-card bento-span-4" onclick="selectCategoryFromLink('Herramientas manuales')">
+                <div>
+                    <span class="bento-eyebrow">Acero Forjado</span>
+                    <h3>Herramientas Manuales</h3>
+                    <p>Martillos balanceados, llaves ajustables, alicates y destornilladores ergonómicos.</p>
+                </div>
+                <div class="bento-action">
+                    <span>Filtrar manuales &rarr;</span>
+                </div>
+            </div>
+
+            <div class="bento-card bento-span-4" onclick="selectCategoryFromLink('Seguridad')">
+                <div>
+                    <span class="bento-eyebrow">Protección Certificada</span>
+                    <h3>Seguridad Industrial</h3>
+                    <p>Cascos, guantes de cuero reforzado y lentes de policarbonato de alta resistencia.</p>
+                </div>
+                <div class="bento-action">
+                    <span>Ver equipamiento &rarr;</span>
+                </div>
+            </div>
+
+            <div class="bento-card bento-span-4" onclick="selectCategoryFromLink('Tornillería')">
+                <div>
+                    <span class="bento-eyebrow">Fijación & Montaje</span>
+                    <h3>Tornillería y Fijaciones</h3>
+                    <p>Pernos galvanizados, tuercas hexagonales y tornillos autoperforantes por caja.</p>
+                </div>
+                <div class="bento-action">
+                    <span>Ver fijaciones &rarr;</span>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    {% if usuario and usuario.rol == 'admin' %}
+    <!-- ADMIN SECTION: ADD NEW PRODUCT -->
+    <section id="panel-admin" class="section-container" style="padding-top: 2rem; padding-bottom: 0;">
+        <div class="admin-create-card">
+            <div class="admin-create-header">
+                <div>
+                    <span class="admin-create-eyebrow">Gestión de Catálogo &middot; Administrador</span>
+                    <h3>Añadir nuevo producto</h3>
+                    <p>Registra artículos directamente desde esta vista sin salir de la tienda.</p>
+                </div>
+            </div>
+
+            <form method="post" action="{% url 'agregar_producto' %}" class="admin-create-form js-preserve-scroll" data-toast="Nuevo producto añadido al catálogo">
+                {% csrf_token %}
+                <div class="admin-create-grid">
+                    <div class="admin-form-field">
+                        <label for="nuevo-nombre">Nombre del producto</label>
+                        <input type="text" id="nuevo-nombre" name="nombre" class="apple-input" placeholder="Ej. Taladro inalámbrico 20V" maxlength="150" required>
+                    </div>
+
+                    <div class="admin-form-field">
+                        <label for="nueva-categoria">Categoría</label>
+                        <input type="text" id="nueva-categoria" name="categoria" list="categorias-existentes" class="apple-input" placeholder="Ej. Herramientas eléctricas" maxlength="100" required>
+                        <datalist id="categorias-existentes">
+                            {% for cat in categorias %}
+                            <option value="{{ cat }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="admin-form-field">
+                        <label for="nuevo-precio">Precio (CLP)</label>
+                        <input type="number" id="nuevo-precio" name="precio" class="apple-input" placeholder="Ej. 29990" min="0" step="1" required>
+                    </div>
+
+                    <div class="admin-form-field">
+                        <label for="nuevo-stock">Stock inicial</label>
+                        <input type="number" id="nuevo-stock" name="stock" class="apple-input" value="10" min="0" step="1" required>
+                    </div>
+
+                    <div class="admin-form-field admin-form-field-wide">
+                        <label for="nueva-imagen">Ruta o URL de imagen <span class="label-optional">(opcional)</span></label>
+                        <input type="text" id="nueva-imagen" name="imagen" class="apple-input" placeholder="/static/catalogo/img/sin-imagen.jpg" maxlength="255">
+                    </div>
+                </div>
+
+                <div class="admin-create-footer">
+                    <label class="admin-checkbox-wrap">
+                        <input type="checkbox" name="activo" checked>
+                        <span>Publicar como producto activo inmediatamente</span>
+                    </label>
+                    <button type="submit" class="btn-apple-primary">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <line x1="12" y1="5" x2="12" y2="19"></line>
+                            <line x1="5" y1="12" x2="19" y2="12"></line>
+                        </svg>
+                        <span>Añadir producto</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </section>
+    {% endif %}
+
+    <!-- 3. STOREFRONT CATALOG SECTION -->
+    <section id="catalogo" class="section-container" style="padding-top: 2.5rem;">
+        <div class="section-headline" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2>Catálogo Completo. <span>Elige las herramientas para tu proyecto.</span></h2>
+            </div>
+            <span id="results-counter" class="results-count">Mostrando {{ resumen.total }} productos</span>
+        </div>
+
+        <!-- Category Scroller Ribbon -->
+        <div class="category-scroller" role="tablist" aria-label="Filtrar por categoría">
+            <button type="button" class="cat-pill active" data-cat="all" onclick="setCategoryFilter('all', this)">
+                <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <rect x="3" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="3" width="7" height="7"></rect>
+                    <rect x="14" y="14" width="7" height="7"></rect>
+                    <rect x="3" y="14" width="7" height="7"></rect>
+                </svg>
+                <span>Todas las categorías</span>
+            </button>
+            {% for cat in categorias %}
+            <button type="button" class="cat-pill" data-cat="{{ cat }}" onclick="setCategoryFilter('{{ cat|escapejs }}', this)">
+                <span>{{ cat }}</span>
+            </button>
+            {% endfor %}
+        </div>
+
+        <!-- Search, Availability & Sort Toolbar -->
+        <div class="catalog-toolbar">
+            <div class="search-box">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <circle cx="11" cy="11" r="8"></circle>
+                    <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                </svg>
+                <input type="search" id="catalog-search" class="search-input" placeholder="Buscar por nombre, herramienta o categoría..." oninput="applyCatalogFilters()">
+            </div>
+
+            <div class="toolbar-filters">
+                <div class="segmented-control" role="group" aria-label="Filtro de disponibilidad">
+                    <button type="button" class="seg-btn active" data-stock-filter="all" onclick="setStockFilter('all', this)">Todos</button>
+                    <button type="button" class="seg-btn" data-stock-filter="instock" onclick="setStockFilter('instock', this)">Disponibles ({{ resumen.disponibles }})</button>
+                    <button type="button" class="seg-btn" data-stock-filter="outofstock" onclick="setStockFilter('outofstock', this)">Sin stock ({{ resumen.sin_stock }})</button>
+                </div>
+
+                <select id="catalog-sort" class="sort-select" onchange="applyCatalogFilters()" aria-label="Ordenar productos">
+                    <option value="default">Orden: Destacados</option>
+                    <option value="price-asc">Precio: Menor a Mayor</option>
+                    <option value="price-desc">Precio: Mayor a Menor</option>
+                    <option value="name-asc">Nombre: A &ndash; Z</option>
+                    <option value="stock-desc">Mayor disponibilidad</option>
+                </select>
+            </div>
+        </div>
+
+        <!-- Empty Filter Feedback -->
+        <div id="empty-catalog-state" class="empty-catalog-state">
+            <h3 style="margin: 0 0 0.5rem; font-size: 1.25rem;">No encontramos productos con esos filtros</h3>
+            <p style="margin: 0 0 1.25rem; color: var(--text-secondary); font-size: 0.9rem;">Prueba ajustando los términos de búsqueda o restableciendo las categorías.</p>
+            <button type="button" class="btn-apple-primary" onclick="resetCatalogFilters()">Restablecer filtros</button>
+        </div>
+
+        <!-- Products Grid -->
+        <div id="productos-grid" class="productos-grid">
+            {% for producto in productos %}
+            <article class="producto-card {% if producto.stock == 0 %}sin-stock{% endif %} {% if not producto.activo %}inactivo-card{% endif %}"
+                     data-id="{{ producto.id }}"
+                     data-nombre="{{ producto.nombre|lower }}"
+                     data-categoria="{{ producto.categoria }}"
+                     data-precio="{{ producto.precio }}"
+                     data-stock="{{ producto.stock }}"
+                     data-activo="{% if producto.activo %}1{% else %}0{% endif %}">
+
+                <div class="card-top-bar">
+                    <span class="producto-categoria">{{ producto.categoria }}</span>
+                    {% if not producto.activo %}
+                        <span class="stock-pill retirado">Retirado</span>
+                    {% elif producto.stock == 0 %}
+                        <span class="stock-pill agotado">
+                            <span class="stock-pill-dot"></span>
+                            Sin stock
+                        </span>
+                    {% elif producto.stock <= 5 %}
+                        <span class="stock-pill bajo-stock">
+                            <span class="stock-pill-dot"></span>
+                            Últimas {{ producto.stock }} u.
+                        </span>
+                    {% else %}
+                        <span class="stock-pill disponible">
+                            <span class="stock-pill-dot"></span>
+                            {{ producto.stock }} en stock
+                        </span>
+                    {% endif %}
+                </div>
+
+                <a href="{% url 'detalle' producto.id %}" class="card-image-wrap">
+                    <img src="{{ producto.imagen }}"
+                         alt="{{ producto.nombre }}"
+                         class="producto-imagen"
+                         loading="lazy"
+                         onerror="this.src='/static/catalogo/img/sin-imagen.jpg'">
+                </a>
+
+                <div class="producto-body">
+                    <h3 class="producto-nombre">
+                        <a href="{% url 'detalle' producto.id %}">{{ producto.nombre }}</a>
+                    </h3>
+
+                    <div class="producto-price-row">
+                        <span class="producto-precio js-price" data-price="{{ producto.precio }}">${{ producto.precio }}</span>
+                        <span class="producto-iva">IVA incluido</span>
+                    </div>
+
+                    <div class="producto-footer">
+                        <div class="card-actions-row">
+                            {% if producto.activo and producto.stock > 0 %}
+                                <form method="post" action="{% url 'comprar' producto.id %}" class="js-preserve-scroll" data-toast="{{ producto.nombre }} agregado a tu bolsa">
+                                    {% csrf_token %}
+                                    <button type="submit" class="btn-comprar">
+                                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                        </svg>
+                                        <span>Comprar</span>
+                                    </button>
+                                </form>
+                            {% else %}
+                                <button type="button" class="btn-comprar" disabled>
+                                    {% if not producto.activo %}No disponible{% else %}Agotado{% endif %}
+                                </button>
+                            {% endif %}
+
+                            <a href="{% url 'detalle' producto.id %}" class="btn-ver-detalle" title="Ver especificaciones de {{ producto.nombre }}" aria-label="Ver detalles de {{ producto.nombre }}">
+                                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <polyline points="9 18 15 12 9 6"></polyline>
+                                </svg>
+                            </a>
+                        </div>
+
+                        {% if usuario and usuario.rol == 'admin' %}
+                        <div class="producto-acciones-admin">
+                            <div class="admin-panel-label">
+                                <span>Control Admin</span>
+                                <span>ID #{{ producto.id }}</span>
+                            </div>
+                            <div class="admin-controls-row">
+                                <form method="post" action="{% url 'agregar_stock' producto.id %}" class="form-stock js-preserve-scroll" data-toast="Stock actualizado para {{ producto.nombre }}">
+                                    {% csrf_token %}
+                                    <input type="number" name="cantidad" min="1" value="5" class="input-stock" aria-label="Cantidad de stock a agregar">
+                                    <button type="submit" class="btn-admin btn-stock">+ Stock</button>
+                                </form>
+
+                                {% if producto.activo %}
+                                    <form method="post" action="{% url 'retirar' producto.id %}" class="js-preserve-scroll" data-toast="{{ producto.nombre }} retirado del catálogo público">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-admin btn-retirar">Retirar</button>
+                                    </form>
+                                {% else %}
+                                    <form method="post" action="{% url 'reactivar' producto.id %}" class="js-preserve-scroll" data-toast="{{ producto.nombre }} reactivado en el catálogo">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-admin btn-reactivar">Reactivar</button>
+                                    </form>
+                                {% endif %}
+                            </div>
+                        </div>
+                        {% endif %}
+                    </div>
+                </div>
+            </article>
+            {% endfor %}
+        </div>
+    </section>
+
+    <script>
+        let currentCategory = 'all';
+        let currentStockFilter = 'all';
+
+        function setCategoryFilter(category, btnEl) {
+            currentCategory = category;
+            document.querySelectorAll('.cat-pill').forEach(btn => btn.classList.remove('active'));
+            if (btnEl) {
+                btnEl.classList.add('active');
+            } else {
+                const match = Array.from(document.querySelectorAll('.cat-pill')).find(
+                    b => b.getAttribute('data-cat') === category
+                );
+                if (match) match.classList.add('active');
+            }
+            applyCatalogFilters();
+        }
+
+        function selectCategoryFromLink(categoryName) {
+            setCategoryFilter(categoryName, null);
+            const catSection = document.getElementById('catalogo');
+            if (catSection) {
+                catSection.scrollIntoView({ behavior: 'smooth' });
+            }
+        }
+
+        function setStockFilter(stockMode, btnEl) {
+            currentStockFilter = stockMode;
+            document.querySelectorAll('.seg-btn').forEach(btn => btn.classList.remove('active'));
+            if (btnEl) btnEl.classList.add('active');
+            applyCatalogFilters();
+        }
+
+        function resetCatalogFilters() {
+            const searchInput = document.getElementById('catalog-search');
+            const sortSelect = document.getElementById('catalog-sort');
+            if (searchInput) searchInput.value = '';
+            if (sortSelect) sortSelect.value = 'default';
+            setStockFilter('all', document.querySelector('.seg-btn[data-stock-filter="all"]'));
+            setCategoryFilter('all', document.querySelector('.cat-pill[data-cat="all"]'));
+        }
+
+        function applyCatalogFilters() {
+            const grid = document.getElementById('productos-grid');
+            if (!grid) return;
+
+            const query = (document.getElementById('catalog-search')?.value || '').trim().toLowerCase();
+            const sortMode = document.getElementById('catalog-sort')?.value || 'default';
+            const cards = Array.from(grid.querySelectorAll('.producto-card'));
+
+            let visibleCount = 0;
+
+            cards.forEach(card => {
+                const nombre = card.getAttribute('data-nombre') || '';
+                const categoria = card.getAttribute('data-categoria') || '';
+                const stock = parseInt(card.getAttribute('data-stock') || '0', 10);
+
+                const matchesCat = (currentCategory === 'all') || (categoria === currentCategory);
+                const matchesSearch = !query || nombre.includes(query) || categoria.toLowerCase().includes(query);
+
+                let matchesStock = true;
+                if (currentStockFilter === 'instock') matchesStock = stock > 0;
+                if (currentStockFilter === 'outofstock') matchesStock = stock === 0;
+
+                if (matchesCat && matchesSearch && matchesStock) {
+                    card.style.display = '';
+                    visibleCount++;
+                } else {
+                    card.style.display = 'none';
+                }
+            });
+
+            // Sort cards
+            cards.sort((a, b) => {
+                if (sortMode === 'price-asc') {
+                    return parseInt(a.dataset.precio, 10) - parseInt(b.dataset.precio, 10);
+                }
+                if (sortMode === 'price-desc') {
+                    return parseInt(b.dataset.precio, 10) - parseInt(a.dataset.precio, 10);
+                }
+                if (sortMode === 'name-asc') {
+                    return (a.dataset.nombre || '').localeCompare(b.dataset.nombre || '');
+                }
+                if (sortMode === 'stock-desc') {
+                    return parseInt(b.dataset.stock, 10) - parseInt(a.dataset.stock, 10);
+                }
+                return parseInt(a.dataset.id, 10) - parseInt(b.dataset.id, 10);
+            });
+
+            cards.forEach(card => grid.appendChild(card));
+
+            const counter = document.getElementById('results-counter');
+            if (counter) {
+                counter.textContent = `Mostrando ${visibleCount} producto${visibleCount === 1 ? '' : 's'}`;
+            }
+
+            const emptyState = document.getElementById('empty-catalog-state');
+            if (emptyState) {
+                emptyState.style.display = visibleCount === 0 ? 'block' : 'none';
+            }
+        }
+    </script>
+{% endblock %}

@@ -1,0 +1,426 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>{% block titulo %}Incapas Pro — Ferretería & Ingeniería{% endblock %}</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="{% static 'catalogo/css/estilos.css' %}">
+</head>
+<body>
+
+    <!-- Global Sticky Navigation (Apple.com Inspired) -->
+    <header class="global-nav">
+        <div class="global-nav-inner">
+            <a href="{% url 'lista' %}" class="brand-logo" aria-label="Incapas Pro Inicio">
+                <span class="brand-logo-mark">
+                    <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.75" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                    </svg>
+                </span>
+                <span>Incapas</span>
+                <span class="brand-pro-tag">Pro</span>
+            </a>
+
+            <ul class="nav-links">
+                <li><a href="{% url 'lista' %}#inicio">Inicio</a></li>
+                <li><a href="{% url 'lista' %}#destacados">Ecosistema Pro</a></li>
+                <li><a href="{% url 'lista' %}#catalogo">Catálogo</a></li>
+                <li><a href="{% url 'lista' %}#especificaciones">Garantía & Envío</a></li>
+                {% if usuario and usuario.rol == 'admin' %}
+                <li><a href="{% url 'lista' %}#panel-admin">Administración</a></li>
+                {% endif %}
+            </ul>
+
+            <div class="nav-actions">
+                <!-- Search Trigger -->
+                <button type="button" class="nav-icon-btn" onclick="focusCatalogSearch()" title="Buscar productos">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <circle cx="11" cy="11" r="8"></circle>
+                        <line x1="21" y1="21" x2="16.65" y2="16.65"></line>
+                    </svg>
+                    <span>Buscar</span>
+                </button>
+
+                <!-- Shopping Bag Drawer Trigger -->
+                <button type="button" class="nav-icon-btn nav-bag-btn" onclick="toggleBagDrawer(true)" aria-label="Abrir bolsa de compras">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                        <line x1="3" y1="6" x2="21" y2="6"></line>
+                        <path d="M16 10a4 4 0 0 1-8 0"></path>
+                    </svg>
+                    <span>Bolsa</span>
+                    <span class="bag-badge">{{ carrito_cantidad|default:0 }}</span>
+                </button>
+
+                <!-- Optional User Account State -->
+                {% if usuario %}
+                    <div class="user-pill">
+                        <svg width="14" height="14" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <strong>{{ usuario.nombre }}</strong>
+                        {% if usuario.rol == 'admin' %}
+                            <span class="user-role-badge">Admin</span>
+                        {% endif %}
+                        <a href="{% url 'logout' %}" class="nav-logout-link" title="Cerrar sesión">Salir</a>
+                    </div>
+                {% else %}
+                    <button type="button" class="nav-icon-btn" onclick="toggleLoginModal(true)">
+                        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                            <circle cx="12" cy="7" r="4"></circle>
+                        </svg>
+                        <span>Iniciar sesión</span>
+                    </button>
+                {% endif %}
+            </div>
+        </div>
+    </header>
+
+    <!-- Admin Mode Bar (Only when logged in as admin) -->
+    {% if usuario and usuario.rol == 'admin' %}
+    <div class="admin-mode-bar">
+        <div class="admin-mode-bar-inner">
+            <div class="admin-mode-indicator">
+                <span class="pulse-dot"></span>
+                <span><strong>Modo Administrador Activo:</strong> Creación de productos, control de stock y visibilidad habilitados en la página.</span>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    <!-- Main Page Content -->
+    <main>
+        {% block contenido %}{% endblock %}
+    </main>
+
+    <!-- Value Proposition Strip -->
+    <section id="especificaciones" class="value-strip">
+        <div class="value-grid">
+            <div class="value-item">
+                <div class="value-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="1" y="3" width="15" height="13"></rect>
+                        <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                        <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                        <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                    </svg>
+                </div>
+                <h4>Despacho directo a obra</h4>
+                <p>Envíos rápidos en 24 horas o retiro inmediato en sucursal sin costo adicional.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M12 22s8-4 8-10V5l-8-3-8 3v7c0 6 8 10 8 10z"></path>
+                    </svg>
+                </div>
+                <h4>Garantía Industrial Pro</h4>
+                <p>Respaldo técnico certificado en todas nuestras herramientas eléctricas y manuales.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <polyline points="22 12 18 12 15 21 9 3 6 12 2 12"></polyline>
+                    </svg>
+                </div>
+                <h4>Stock en tiempo real</h4>
+                <p>Inventario sincronizado directamente con nuestra base de datos SQLite.</p>
+            </div>
+            <div class="value-item">
+                <div class="value-icon">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                        <rect x="2" y="5" width="20" height="14" rx="2"></rect>
+                        <line x1="2" y1="10" x2="22" y2="10"></line>
+                    </svg>
+                </div>
+                <h4>Compra sin fricciones</h4>
+                <p>Explora y arma tu pedido como invitado o inicia sesión para funciones avanzadas.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- Slide-Over Shopping Bag Drawer -->
+    <div id="drawer-backdrop" class="drawer-backdrop" onclick="toggleBagDrawer(false)"></div>
+    <aside id="bag-drawer" class="bag-drawer" aria-label="Bolsa de compras">
+        <div class="bag-drawer-header">
+            <div>
+                <h3>Tu Bolsa</h3>
+                <span style="font-size: 0.78rem; color: var(--text-muted);">
+                    {% if carrito_cantidad %}{{ carrito_cantidad }} unidad{{ carrito_cantidad|pluralize:"es" }} seleccionada{{ carrito_cantidad|pluralize:"s" }}{% else %}Sin artículos aún{% endif %}
+                </span>
+            </div>
+            <button type="button" class="drawer-close-btn" onclick="toggleBagDrawer(false)" aria-label="Cerrar bolsa">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+        </div>
+
+        <div class="bag-drawer-body">
+            {% if carrito %}
+                <ul class="carrito-lista">
+                    {% for item in carrito %}
+                    <li class="carrito-item">
+                        <img src="{{ item.producto.imagen }}" alt="{{ item.producto.nombre }}" class="carrito-mini" onerror="this.src='/static/catalogo/img/sin-imagen.jpg'">
+                        <div class="carrito-item-info">
+                            <p class="carrito-nombre">{{ item.producto.nombre }}</p>
+                            <p class="carrito-meta">
+                                Cantidad: <strong>{{ item.cantidad }}</strong> &middot;
+                                <span class="js-price" data-price="{{ item.subtotal }}">${{ item.subtotal }}</span>
+                            </p>
+                        </div>
+                        <form method="post" action="{% url 'eliminar_carrito' item.producto.id %}" class="js-preserve-scroll">
+                            {% csrf_token %}
+                            <button type="submit" class="carrito-remove-btn" title="Quitar de la bolsa">Quitar</button>
+                        </form>
+                    </li>
+                    {% endfor %}
+                </ul>
+            {% else %}
+                <div style="text-align: center; padding: 3.5rem 1rem;">
+                    <div style="width: 52px; height: 52px; border-radius: 50%; background: var(--bg-canvas); display: inline-flex; align-items: center; justify-content: center; color: var(--text-muted); margin-bottom: 1rem;">
+                        <svg width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                            <line x1="3" y1="6" x2="21" y2="6"></line>
+                            <path d="M16 10a4 4 0 0 1-8 0"></path>
+                        </svg>
+                    </div>
+                    <h4 style="margin: 0 0 0.35rem; font-size: 1rem;">Tu bolsa está vacía</h4>
+                    <p style="margin: 0; font-size: 0.85rem; color: var(--text-secondary);">Explora el catálogo y agrega herramientas o insumos para tu proyecto.</p>
+                </div>
+            {% endif %}
+        </div>
+
+        {% if carrito %}
+        <div class="bag-drawer-footer">
+            <div class="bag-summary-row">
+                <span class="bag-summary-label">Total estimado (IVA incl.)</span>
+                <span class="bag-summary-total js-price" data-price="{{ carrito_total }}">${{ carrito_total }}</span>
+            </div>
+            <div class="bag-footer-actions">
+                <form method="post" action="{% url 'finalizar_compra' %}" class="js-checkout-form">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-apple-primary" style="width: 100%;">
+                        Confirmar Pedido
+                    </button>
+                </form>
+                <form method="post" action="{% url 'vaciar_carrito' %}" class="js-preserve-scroll">
+                    {% csrf_token %}
+                    <button type="submit" class="btn-vaciar">Vaciar bolsa y devolver stock</button>
+                </form>
+            </div>
+        </div>
+        {% endif %}
+    </aside>
+
+    <!-- Optional Quick Login Modal -->
+    <div id="login-modal" class="apple-modal-overlay" onclick="if(event.target === this) toggleLoginModal(false)">
+        <div class="apple-modal-card">
+            <button type="button" class="drawer-close-btn" style="position: absolute; top: 1.25rem; right: 1.25rem;" onclick="toggleLoginModal(false)" aria-label="Cerrar modal">
+                <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <line x1="18" y1="6" x2="6" y2="18"></line>
+                    <line x1="6" y1="6" x2="18" y2="18"></line>
+                </svg>
+            </button>
+            <div style="text-align: center;">
+                <div class="login-icon-ring">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <path d="M20 21v-2a4 4 0 0 0-4-4H8a4 4 0 0 0-4 4v2"></path>
+                        <circle cx="12" cy="7" r="4"></circle>
+                    </svg>
+                </div>
+                <h3 style="margin: 0 0 0.35rem; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em;">Inicia sesión en Incapas</h3>
+                <p style="margin: 0 0 1.5rem; font-size: 0.86rem; color: var(--text-secondary);">
+                    El inicio de sesión es opcional. Identifícate como cliente o ingresa <strong>admin</strong> para gestionar el inventario.
+                </p>
+            </div>
+            <form method="post" action="{% url 'login' %}">
+                {% csrf_token %}
+                <input type="hidden" name="next" value="{{ request.path }}">
+                <input type="text" id="modal-usuario-input" name="usuario" class="apple-input" placeholder="Tu nombre o 'admin'" required>
+                <button type="submit" class="btn-apple-primary" style="width: 100%; margin-top: 0.5rem;">Continuar</button>
+            </form>
+            <div class="quick-roles-box">
+                <span class="quick-roles-title">Acceso rápido con un clic</span>
+                <div class="quick-roles-grid">
+                    <button type="button" class="quick-role-btn" onclick="submitQuickRole('Cliente Pro')">
+                        <strong>Cliente Pro</strong>
+                        <span>Vista comprador</span>
+                    </button>
+                    <button type="button" class="quick-role-btn" onclick="submitQuickRole('admin')">
+                        <strong>Administrador</strong>
+                        <span>Gestión de stock</span>
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Toast Notification -->
+    <div id="apple-toast" class="apple-toast" role="status" aria-live="polite">
+        <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+            <polyline points="20 6 9 17 4 12"></polyline>
+        </svg>
+        <span id="apple-toast-msg">Acción completada</span>
+    </div>
+
+    <!-- Apple-Inspired Footer -->
+    <footer class="apple-footer">
+        <div class="apple-footer-inner">
+            <div class="footer-columns">
+                <div class="footer-col">
+                    <h5>Incapas Pro Hardware</h5>
+                    <p style="margin: 0 0 0.75rem; line-height: 1.6; max-width: 280px;">
+                        Herramientas de precisión, equipamiento eléctrico e insumos de construcción diseñados para profesionales y proyectos exigentes.
+                    </p>
+                </div>
+                <div class="footer-col">
+                    <h5>Explorar</h5>
+                    <ul>
+                        <li><a href="{% url 'lista' %}#inicio">Presentación</a></li>
+                        <li><a href="{% url 'lista' %}#destacados">Ecosistema Pro</a></li>
+                        <li><a href="{% url 'lista' %}#catalogo">Catálogo Completo</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Categorías</h5>
+                    <ul>
+                        <li><a href="{% url 'lista' %}#catalogo" onclick="selectCategoryFromLink('Herramientas eléctricas')">Herramientas eléctricas</a></li>
+                        <li><a href="{% url 'lista' %}#catalogo" onclick="selectCategoryFromLink('Herramientas manuales')">Herramientas manuales</a></li>
+                        <li><a href="{% url 'lista' %}#catalogo" onclick="selectCategoryFromLink('Seguridad')">Seguridad industrial</a></li>
+                        <li><a href="{% url 'lista' %}#catalogo" onclick="selectCategoryFromLink('Electricidad')">Electricidad e iluminación</a></li>
+                    </ul>
+                </div>
+                <div class="footer-col">
+                    <h5>Cuenta y Gestión</h5>
+                    <ul>
+                        {% if usuario %}
+                            <li><span>Conectado como <strong>{{ usuario.nombre }}</strong></span></li>
+                            <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
+                        {% else %}
+                            <li><a href="{% url 'login' %}">Iniciar sesión (Opcional)</a></li>
+                            <li><a href="#" onclick="toggleLoginModal(true); return false;">Acceso Administrador</a></li>
+                        {% endif %}
+                    </ul>
+                </div>
+            </div>
+            <div class="footer-bottom">
+                <span>Copyright &copy; 2026 Ferretería Incapas Pro. Todos los derechos reservados.</span>
+                <span>Chile &middot; Precios en Pesos Chilenos (CLP)</span>
+            </div>
+        </div>
+    </footer>
+
+    <script>
+        // Format CLP currency numbers cleanly (e.g. $39.990)
+        function formatCLPPrices() {
+            document.querySelectorAll('.js-price').forEach(el => {
+                const raw = parseInt(el.getAttribute('data-price'), 10);
+                if (!isNaN(raw)) {
+                    el.textContent = '$' + raw.toLocaleString('es-CL');
+                }
+            });
+        }
+
+        function toggleBagDrawer(open) {
+            const drawer = document.getElementById('bag-drawer');
+            const backdrop = document.getElementById('drawer-backdrop');
+            if (!drawer || !backdrop) return;
+            if (open) {
+                drawer.classList.add('open');
+                backdrop.classList.add('open');
+            } else {
+                drawer.classList.remove('open');
+                backdrop.classList.remove('open');
+            }
+        }
+
+        function toggleLoginModal(open) {
+            const modal = document.getElementById('login-modal');
+            if (!modal) return;
+            if (open) {
+                modal.classList.add('open');
+                const input = document.getElementById('modal-usuario-input');
+                if (input) setTimeout(() => input.focus(), 100);
+            } else {
+                modal.classList.remove('open');
+            }
+        }
+
+        function submitQuickRole(roleName) {
+            const input = document.getElementById('modal-usuario-input');
+            if (input && input.form) {
+                input.value = roleName;
+                input.form.submit();
+            }
+        }
+
+        function focusCatalogSearch() {
+            const searchInput = document.getElementById('catalog-search');
+            if (searchInput) {
+                searchInput.scrollIntoView({ behavior: 'smooth', block: 'center' });
+                setTimeout(() => searchInput.focus(), 350);
+            } else {
+                window.location.href = "{% url 'lista' %}#catalogo";
+            }
+        }
+
+        function showToast(message) {
+            const toast = document.getElementById('apple-toast');
+            const msg = document.getElementById('apple-toast-msg');
+            if (!toast || !msg) return;
+            msg.textContent = message;
+            toast.classList.add('show');
+            setTimeout(() => toast.classList.remove('show'), 3200);
+        }
+
+        document.addEventListener('DOMContentLoaded', () => {
+            formatCLPPrices();
+
+            // Restore scroll position & show feedback after POST actions
+            const savedScroll = sessionStorage.getItem('incapas_scroll_y');
+            const savedAction = sessionStorage.getItem('incapas_action_msg');
+            const reopenBag = sessionStorage.getItem('incapas_reopen_bag');
+
+            if (savedScroll !== null) {
+                window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
+                sessionStorage.removeItem('incapas_scroll_y');
+            }
+            if (savedAction) {
+                showToast(savedAction);
+                sessionStorage.removeItem('incapas_action_msg');
+            }
+            if (reopenBag === '1') {
+                toggleBagDrawer(true);
+                sessionStorage.removeItem('incapas_reopen_bag');
+            }
+
+            // Attach scroll preservation to buy & admin forms
+            document.querySelectorAll('form.js-preserve-scroll').forEach(form => {
+                form.addEventListener('submit', () => {
+                    sessionStorage.setItem('incapas_scroll_y', window.scrollY);
+                    const msg = form.getAttribute('data-toast') || 'Catálogo actualizado';
+                    sessionStorage.setItem('incapas_action_msg', msg);
+                    if (form.getAttribute('data-open-bag') === '1') {
+                        sessionStorage.setItem('incapas_reopen_bag', '1');
+                    }
+                });
+            });
+
+            document.querySelectorAll('form.js-checkout-form').forEach(form => {
+                form.addEventListener('submit', () => {
+                    sessionStorage.setItem('incapas_scroll_y', window.scrollY);
+                    sessionStorage.setItem('incapas_action_msg', 'Pedido confirmado con éxito. Gracias por tu compra.');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,56 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Iniciar sesión — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <section class="login-section">
+        <div class="login-caja">
+            <div class="login-icon-ring">
+                <svg width="26" height="26" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M14.7 6.3a1 1 0 0 0 0 1.4l1.6 1.6a1 1 0 0 0 1.4 0l3.77-3.77a6 6 0 0 1-7.94 7.94l-6.91 6.91a2.12 2.12 0 0 1-3-3l6.91-6.91a6 6 0 0 1 7.94-7.94l-3.76 3.76z"/>
+                </svg>
+            </div>
+
+            <h2>Inicia sesión en Incapas</h2>
+            <p class="login-subtitle">
+                Personaliza tu experiencia o ingresa como administrador para gestionar el inventario.
+            </p>
+
+            {% if error %}
+                <p class="login-error">{{ error }}</p>
+            {% endif %}
+
+            <form method="post" id="page-login-form">
+                {% csrf_token %}
+                <input type="text" id="page-usuario-input" name="usuario" class="apple-input" placeholder="Ingresa tu nombre o 'admin'" required autofocus>
+                <button type="submit" class="btn-apple-primary" style="width: 100%; padding: 0.9rem;">
+                    <span>Continuar</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <div class="quick-roles-box">
+                <span class="quick-roles-title">Perfiles de acceso rápido</span>
+                <div class="quick-roles-grid">
+                    <button type="button" class="quick-role-btn" onclick="document.getElementById('page-usuario-input').value='Cliente Pro'; document.getElementById('page-login-form').submit();">
+                        <strong>Cliente Pro</strong>
+                        <span>Modo comprador</span>
+                    </button>
+                    <button type="button" class="quick-role-btn" onclick="document.getElementById('page-usuario-input').value='admin'; document.getElementById('page-login-form').submit();">
+                        <strong>Administrador</strong>
+                        <span>Control de stock</span>
+                    </button>
+                </div>
+            </div>
+
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-hairline);">
+                <a href="{% url 'lista' %}" style="font-size: 0.85rem; color: var(--accent-blue); font-weight: 500;">
+                    Continuar explorando como invitado &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

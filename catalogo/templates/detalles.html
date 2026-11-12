@@ -1,0 +1,212 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}{{ producto.nombre }} — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <div class="detail-page-wrap">
+
+        <!-- Breadcrumb Navigation -->
+        <nav class="breadcrumb-nav" aria-label="Ruta de navegación">
+            <a href="{% url 'lista' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'lista' %}#catalogo">{{ producto.categoria }}</a>
+            <span>/</span>
+            <span style="color: var(--text-primary); font-weight: 500;">{{ producto.nombre }}</span>
+        </nav>
+
+        <!-- Two-Column Apple Buy Layout -->
+        <div class="detail-hero-grid">
+            <!-- Left: Sticky Product Showcase Stage -->
+            <div class="detail-gallery-card">
+                <img src="{{ producto.imagen }}"
+                     alt="{{ producto.nombre }}"
+                     class="imagen-detalle"
+                     onerror="this.src='/static/catalogo/img/sin-imagen.jpg'">
+            </div>
+
+            <!-- Right: Specifications & Purchase Panel -->
+            <div class="detail-buy-panel">
+                <span class="detail-eyebrow">{{ producto.categoria }} &middot; SKU #INC-{{ producto.id|stringformat:"04d" }}</span>
+                <h1 class="detail-title">{{ producto.nombre }}</h1>
+
+                <div class="detail-price-box">
+                    <span class="precio-detalle js-price" data-price="{{ producto.precio }}">${{ producto.precio }}</span>
+                    <span style="font-size: 0.85rem; color: var(--text-muted);">IVA incluido &middot; Precio unitario</span>
+                </div>
+
+                <!-- Technical Specs Bento -->
+                <div class="detail-specs-bento">
+                    <div class="spec-tile">
+                        <span class="spec-tile-label">Especialidad</span>
+                        <span class="spec-tile-value">{{ producto.categoria }}</span>
+                    </div>
+                    <div class="spec-tile">
+                        <span class="spec-tile-label">Disponibilidad</span>
+                        <span class="spec-tile-value">
+                            {% if producto.stock == 0 %}
+                                <span style="color: var(--status-red);">Sin stock (0 u.)</span>
+                            {% else %}
+                                <span style="color: var(--status-green-dark);">{{ producto.stock }} unidades en bodega</span>
+                            {% endif %}
+                        </span>
+                    </div>
+                    <div class="spec-tile">
+                        <span class="spec-tile-label">Estado de Catálogo</span>
+                        <span class="spec-tile-value">
+                            {% if producto.activo %}Activo y verificado{% else %}<span style="color: var(--status-red);">Retirado</span>{% endif %}
+                        </span>
+                    </div>
+                    <div class="spec-tile">
+                        <span class="spec-tile-label">Respaldo Técnico</span>
+                        <span class="spec-tile-value">Garantía Pro 24 meses</span>
+                    </div>
+                </div>
+
+                <!-- Primary Purchase Card -->
+                <div class="detail-buy-box">
+                    <div style="display: flex; align-items: center; justify-content: space-between; margin-bottom: 1rem;">
+                        {% if not producto.activo %}
+                            <span class="stock-pill retirado">Artículo retirado temporalmente</span>
+                        {% elif producto.stock == 0 %}
+                            <span class="stock-pill agotado">
+                                <span class="stock-pill-dot"></span>
+                                Agotado temporalmente
+                            </span>
+                        {% else %}
+                            <span class="stock-pill disponible">
+                                <span class="stock-pill-dot"></span>
+                                Disponible para entrega inmediata ({{ producto.stock }} unidades)
+                            </span>
+                        {% endif %}
+                    </div>
+
+                    {% if producto.activo and producto.stock > 0 %}
+                        <form method="post" action="{% url 'comprar' producto.id %}" class="js-preserve-scroll" data-toast="{{ producto.nombre }} agregado a tu bolsa" data-open-bag="1">
+                            {% csrf_token %}
+                            <button type="submit" class="btn-apple-primary" style="width: 100%; font-size: 1rem; padding: 0.95rem;">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M6 2L3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"></path>
+                                    <line x1="3" y1="6" x2="21" y2="6"></line>
+                                    <path d="M16 10a4 4 0 0 1-8 0"></path>
+                                </svg>
+                                <span>Agregar a la bolsa</span>
+                            </button>
+                        </form>
+                    {% else %}
+                        <button type="button" class="btn-comprar" disabled style="padding: 0.95rem; font-size: 0.95rem;">
+                            {% if not producto.activo %}Producto retirado del catálogo{% else %}Sin stock disponible{% endif %}
+                        </button>
+                    {% endif %}
+
+                    <div class="detail-perks">
+                        <div class="detail-perk-row">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <polyline points="20 6 9 17 4 12"></polyline>
+                            </svg>
+                            <span>Retiro gratuito en tienda en menos de 2 horas.</span>
+                        </div>
+                        <div class="detail-perk-row">
+                            <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="var(--accent-blue)" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                <rect x="1" y="3" width="15" height="13"></rect>
+                                <polygon points="16 8 20 8 23 11 23 16 16 16 16 8"></polygon>
+                                <circle cx="5.5" cy="18.5" r="2.5"></circle>
+                                <circle cx="18.5" cy="18.5" r="2.5"></circle>
+                            </svg>
+                            <span>Despacho exprés a domicilio u obra en todo Chile.</span>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Admin Controls on Detail Page -->
+                {% if usuario and usuario.rol == 'admin' %}
+                <div class="producto-acciones-admin" style="padding: 1rem 1.25rem;">
+                    <div class="admin-panel-label" style="margin-bottom: 0.4rem;">
+                        <span>Gestión de Inventario (Administrador)</span>
+                        <span>ID #{{ producto.id }}</span>
+                    </div>
+                    <div class="admin-controls-row">
+                        <form method="post" action="{% url 'agregar_stock' producto.id %}" class="form-stock js-preserve-scroll" data-toast="Stock incrementado">
+                            {% csrf_token %}
+                            <input type="number" name="cantidad" min="1" value="5" class="input-stock">
+                            <button type="submit" class="btn-admin btn-stock">Añadir unidades al stock</button>
+                        </form>
+
+                        {% if producto.activo %}
+                            <form method="post" action="{% url 'retirar' producto.id %}" class="js-preserve-scroll" data-toast="Producto marcado como retirado">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-admin btn-retirar">Retirar</button>
+                            </form>
+                        {% else %}
+                            <form method="post" action="{% url 'reactivar' producto.id %}" class="js-preserve-scroll" data-toast="Producto reactivado">
+                                {% csrf_token %}
+                                <button type="submit" class="btn-admin btn-reactivar">Reactivar</button>
+                            </form>
+                        {% endif %}
+                    </div>
+                </div>
+                {% endif %}
+
+                <div style="margin-top: 1.25rem;">
+                    <a href="{% url 'lista' %}#catalogo" style="font-size: 0.88rem; font-weight: 500; color: var(--accent-blue); display: inline-flex; align-items: center; gap: 0.35rem;">
+                        <span>&larr; Volver al catálogo completo</span>
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Related Products Section -->
+        {% if relacionados %}
+        <section style="margin-top: 5rem; padding-top: 3rem; border-top: 1px solid var(--border-hairline);">
+            <div class="section-headline">
+                <h2>También te podría interesar. <span>Complementos de la línea {{ producto.categoria }}.</span></h2>
+            </div>
+
+            <div class="productos-grid">
+                {% for rel in relacionados %}
+                <article class="producto-card {% if rel.stock == 0 %}sin-stock{% endif %}">
+                    <div class="card-top-bar">
+                        <span class="producto-categoria">{{ rel.categoria }}</span>
+                        {% if rel.stock == 0 %}
+                            <span class="stock-pill agotado"><span class="stock-pill-dot"></span>Sin stock</span>
+                        {% else %}
+                            <span class="stock-pill disponible"><span class="stock-pill-dot"></span>{{ rel.stock }} u.</span>
+                        {% endif %}
+                    </div>
+
+                    <a href="{% url 'detalle' rel.id %}" class="card-image-wrap">
+                        <img src="{{ rel.imagen }}" alt="{{ rel.nombre }}" class="producto-imagen" onerror="this.src='/static/catalogo/img/sin-imagen.jpg'">
+                    </a>
+
+                    <div class="producto-body">
+                        <h3 class="producto-nombre">
+                            <a href="{% url 'detalle' rel.id %}">{{ rel.nombre }}</a>
+                        </h3>
+                        <div class="producto-price-row">
+                            <span class="producto-precio js-price" data-price="{{ rel.precio }}">${{ rel.precio }}</span>
+                            <span class="producto-iva">IVA incl.</span>
+                        </div>
+                        <div class="producto-footer">
+                            <div class="card-actions-row">
+                                {% if rel.activo and rel.stock > 0 %}
+                                    <form method="post" action="{% url 'comprar' rel.id %}" class="js-preserve-scroll" data-toast="{{ rel.nombre }} agregado a tu bolsa">
+                                        {% csrf_token %}
+                                        <button type="submit" class="btn-comprar">Comprar</button>
+                                    </form>
+                                {% else %}
+                                    <button type="button" class="btn-comprar" disabled>Agotado</button>
+                                {% endif %}
+                                <a href="{% url 'detalle' rel.id %}" class="btn-ver-detalle" aria-label="Ver {{ rel.nombre }}">
+                                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                        <polyline points="9 18 15 12 9 6"></polyline>
+                                    </svg>
+                                </a>
+                            </div>
+                        </div>
+                    </div>
+                </article>
+                {% endfor %}
+            </div>
+        </section>
+        {% endif %}
+    </div>
+{% endblock %}

@@ -1,0 +1,362 @@
+[
+  {
+    "id": 1,
+    "nombre": "Martillo carpintero 16 oz",
+    "categoria": "Herramientas manuales",
+    "precio": 5990,
+    "stock": 15,
+    "imagen": "/static/catalogo/img/martillocar.jpg",
+    "activo": true
+  },
+  {
+    "id": 2,
+    "nombre": "Destornillador plano 6 mm",
+    "categoria": "Herramientas manuales",
+    "precio": 2490,
+    "stock": 39,
+    "imagen": "/static/catalogo/img/destor6mm.jpg",
+    "activo": false
+  },
+  {
+    "id": 3,
+    "nombre": "Destornillador phillips 6 mm",
+    "categoria": "Herramientas manuales",
+    "precio": 2490,
+    "stock": 36,
+    "imagen": "/static/catalogo/img/destorphi.jpg",
+    "activo": true
+  },
+  {
+    "id": 4,
+    "nombre": "Alicate universal 8 pulgadas",
+    "categoria": "Herramientas manuales",
+    "precio": 4990,
+    "stock": 20,
+    "imagen": "/static/catalogo/img/alicateuni.jpg",
+    "activo": true
+  },
+  {
+    "id": 5,
+    "nombre": "Sierra para metal",
+    "categoria": "Herramientas manuales",
+    "precio": 6990,
+    "stock": 15,
+    "imagen": "/static/catalogo/img/sierrametal.jpg",
+    "activo": true
+  },
+  {
+    "id": 6,
+    "nombre": "Llave inglesa 10 pulgadas",
+    "categoria": "Herramientas manuales",
+    "precio": 7990,
+    "stock": 12,
+    "imagen": "/static/catalogo/img/llaveing.jpg",
+    "activo": true
+  },
+  {
+    "id": 7,
+    "nombre": "Taladro percutor 650W",
+    "categoria": "Herramientas eléctricas",
+    "precio": 39990,
+    "stock": 8,
+    "imagen": "/static/catalogo/img/taladroper.jpg",
+    "activo": true
+  },
+  {
+    "id": 8,
+    "nombre": "Esmeril angular 4.5 pulgadas",
+    "categoria": "Herramientas eléctricas",
+    "precio": 34990,
+    "stock": 6,
+    "imagen": "/static/catalogo/img/esmeril.jpg",
+    "activo": true
+  },
+  {
+    "id": 9,
+    "nombre": "Sierra circular 1200W",
+    "categoria": "Herramientas eléctricas",
+    "precio": 59990,
+    "stock": 0,
+    "imagen": "/static/catalogo/img/sierracirc.jpg",
+    "activo": true
+  },
+  {
+    "id": 10,
+    "nombre": "Lijadora orbital",
+    "categoria": "Herramientas eléctricas",
+    "precio": 32990,
+    "stock": 5,
+    "imagen": "/static/catalogo/img/lijadoraor.jpg",
+    "activo": true
+  },
+  {
+    "id": 11,
+    "nombre": "Tornillos autoperforantes 1 pulgada (caja 100u)",
+    "categoria": "Tornillería",
+    "precio": 3490,
+    "stock": 60,
+    "imagen": "/static/catalogo/img/tornillosauto.jpg",
+    "activo": true
+  },
+  {
+    "id": 12,
+    "nombre": "Tornillos madera 2 pulgadas (caja 50u)",
+    "categoria": "Tornillería",
+    "precio": 2990,
+    "stock": 55,
+    "imagen": "/static/catalogo/img/tornillomad.jpg",
+    "activo": true
+  },
+  {
+    "id": 13,
+    "nombre": "Tuercas hexagonales 1/4 pulgada (caja 100u)",
+    "categoria": "Tornillería",
+    "precio": 1990,
+    "stock": 70,
+    "imagen": "/static/catalogo/img/tuercahex.jpg",
+    "activo": true
+  },
+  {
+    "id": 14,
+    "nombre": "Pernos galvanizados 3/8 pulgada (caja 20u)",
+    "categoria": "Tornillería",
+    "precio": 4490,
+    "stock": 30,
+    "imagen": "/static/catalogo/img/pernogal.jpg",
+    "activo": true
+  },
+  {
+    "id": 15,
+    "nombre": "Clavos 2 pulgadas (1 kilo)",
+    "categoria": "Tornillería",
+    "precio": 1590,
+    "stock": 45,
+    "imagen": "/static/catalogo/img/clavo2pul.jpg",
+    "activo": true
+  },
+  {
+    "id": 16,
+    "nombre": "Pintura látex blanco 1 galón",
+    "categoria": "Pintura",
+    "precio": 12990,
+    "stock": 18,
+    "imagen": "/static/catalogo/img/pinturalat.jpg",
+    "activo": true
+  },
+  {
+    "id": 17,
+    "nombre": "Pintura esmalte sintético negro 1/4 galón",
+    "categoria": "Pintura",
+    "precio": 5990,
+    "stock": 22,
+    "imagen": "/static/catalogo/img/pinturaesmalteneg.jpg",
+    "activo": true
+  },
+  {
+    "id": 18,
+    "nombre": "Rodillo para pintura 9 pulgadas",
+    "categoria": "Pintura",
+    "precio": 2990,
+    "stock": 33,
+    "imagen": "/static/catalogo/img/rodillopint.jpg",
+    "activo": true
+  },
+  {
+    "id": 19,
+    "nombre": "Brocha 2 pulgadas",
+    "categoria": "Pintura",
+    "precio": 1490,
+    "stock": 50,
+    "imagen": "/static/catalogo/img/brocha2pul.jpg",
+    "activo": true
+  },
+  {
+    "id": 20,
+    "nombre": "Diluyente 1 litro",
+    "categoria": "Pintura",
+    "precio": 2490,
+    "stock": 27,
+    "imagen": "/static/catalogo/img/diluyente.jpg",
+    "activo": true
+  },
+  {
+    "id": 21,
+    "nombre": "Cable eléctrico 2.5 mm (metro)",
+    "categoria": "Electricidad",
+    "precio": 590,
+    "stock": 200,
+    "imagen": "/static/catalogo/img/cableelec.jpg",
+    "activo": true
+  },
+  {
+    "id": 22,
+    "nombre": "Enchufe doble",
+    "categoria": "Electricidad",
+    "precio": 1990,
+    "stock": 40,
+    "imagen": "/static/catalogo/img/enchufedob.jpg",
+    "activo": true
+  },
+  {
+    "id": 23,
+    "nombre": "Interruptor simple",
+    "categoria": "Electricidad",
+    "precio": 1790,
+    "stock": 38,
+    "imagen": "/static/catalogo/img/interruptorsim.jpg",
+    "activo": true
+  },
+  {
+    "id": 24,
+    "nombre": "Ampolleta LED 9W",
+    "categoria": "Electricidad",
+    "precio": 2490,
+    "stock": 60,
+    "imagen": "/static/catalogo/img/ampolleta.jpg",
+    "activo": true
+  },
+  {
+    "id": 25,
+    "nombre": "Cinta aislante",
+    "categoria": "Electricidad",
+    "precio": 890,
+    "stock": 80,
+    "imagen": "/static/catalogo/img/cintaais.jpg",
+    "activo": true
+  },
+  {
+    "id": 26,
+    "nombre": "Llave de paso 1/2 pulgada",
+    "categoria": "Plomería",
+    "precio": 3990,
+    "stock": 15,
+    "imagen": "/static/catalogo/img/llavepaso.jpg",
+    "activo": true
+  },
+  {
+    "id": 27,
+    "nombre": "Codo PVC 1/2 pulgada",
+    "categoria": "Plomería",
+    "precio": 490,
+    "stock": 100,
+    "imagen": "/static/catalogo/img/codopvc.jpg",
+    "activo": true
+  },
+  {
+    "id": 28,
+    "nombre": "Tubo PVC 3 metros",
+    "categoria": "Plomería",
+    "precio": 3990,
+    "stock": 25,
+    "imagen": "/static/catalogo/img/tubopvc.jpg",
+    "activo": true
+  },
+  {
+    "id": 29,
+    "nombre": "Cinta teflón",
+    "categoria": "Plomería",
+    "precio": 690,
+    "stock": 90,
+    "imagen": "/static/catalogo/img/cintatef.jpg",
+    "activo": true
+  },
+  {
+    "id": 30,
+    "nombre": "Sifón para lavamanos",
+    "categoria": "Plomería",
+    "precio": 4990,
+    "stock": 0,
+    "imagen": "/static/catalogo/img/sifonlava.jpg",
+    "activo": true
+  },
+  {
+    "id": 31,
+    "nombre": "Manguera de riego 20 metros",
+    "categoria": "Jardín",
+    "precio": 14990,
+    "stock": 0,
+    "imagen": "/static/catalogo/img/manguera.jpg",
+    "activo": true
+  },
+  {
+    "id": 32,
+    "nombre": "Pala jardinera",
+    "categoria": "Jardín",
+    "precio": 8990,
+    "stock": 14,
+    "imagen": "/static/catalogo/img/palajardin.jpg",
+    "activo": true
+  },
+  {
+    "id": 33,
+    "nombre": "Tijera podadora",
+    "categoria": "Jardín",
+    "precio": 6990,
+    "stock": 16,
+    "imagen": "/static/catalogo/img/tijerapod.jpg",
+    "activo": true
+  },
+  {
+    "id": 34,
+    "nombre": "Guantes de jardín",
+    "categoria": "Jardín",
+    "precio": 2990,
+    "stock": 35,
+    "imagen": "/static/catalogo/img/guantes.jpg",
+    "activo": true
+  },
+  {
+    "id": 35,
+    "nombre": "Casco de seguridad",
+    "categoria": "Seguridad",
+    "precio": 6990,
+    "stock": 20,
+    "imagen": "/static/catalogo/img/casco.jpg",
+    "activo": true
+  },
+  {
+    "id": 36,
+    "nombre": "Guantes de cuero",
+    "categoria": "Seguridad",
+    "precio": 3990,
+    "stock": 30,
+    "imagen": "/static/catalogo/img/guantecuero.jpg",
+    "activo": true
+  },
+  {
+    "id": 37,
+    "nombre": "Lentes de seguridad",
+    "categoria": "Seguridad",
+    "precio": 2490,
+    "stock": 39,
+    "imagen": "/static/catalogo/img/lentes.jpg",
+    "activo": true
+  },
+  {
+    "id": 38,
+    "nombre": "Pegamento epóxico",
+    "categoria": "Adhesivos",
+    "precio": 3490,
+    "stock": 25,
+    "imagen": "/static/catalogo/img/pegamento.jpg",
+    "activo": true
+  },
+  {
+    "id": 39,
+    "nombre": "Silicona transparente",
+    "categoria": "Adhesivos",
+    "precio": 2990,
+    "stock": 28,
+    "imagen": "/static/catalogo/img/silicona.jpg",
+    "activo": true
+  },
+  {
+    "id": 40,
+    "nombre": "Huincha de medir 5 metros",
+    "categoria": "Medición",
+    "precio": 3490,
+    "stock": 22,
+    "imagen": "/static/catalogo/img/huincha.jpg",
+    "activo": true
+  }
+]
