@@ -1,0 +1,74 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Contacto y Consultas — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <div class="detail-page-wrap" style="max-width: 720px;">
+        <nav class="breadcrumb-nav" aria-label="Ruta de navegación">
+            <a href="{% url 'lista' %}">Inicio</a>
+            <span>/</span>
+            <span style="color: var(--text-primary); font-weight: 500;">Contacto y Consultas</span>
+        </nav>
+
+        <div class="admin-create-card">
+            <div class="admin-create-header">
+                <span class="admin-create-eyebrow">Atención al Cliente &middot; Incapas Pro</span>
+                <h3>Envíanos tu consulta</h3>
+                <p>Completa tus datos y selecciona opcionalmente un producto si deseas consultar por un artículo específico del catálogo.</p>
+            </div>
+
+            {% if mensaje_exito %}
+                <div style="background: var(--status-green-bg); color: var(--status-green-dark); border: 1px solid rgba(16, 185, 129, 0.25); padding: 0.9rem 1.15rem; border-radius: var(--radius-sm); font-size: 0.88rem; font-weight: 600; margin-bottom: 1.25rem;">
+                    {{ mensaje_exito }}
+                </div>
+            {% endif %}
+
+            {% if form.errors %}
+                <div class="login-error" style="text-align: left; margin-bottom: 1.25rem;">
+                    {% for field in form %}
+                        {% for error in field.errors %}
+                            <div><strong>{{ field.label }}:</strong> {{ error }}</div>
+                        {% endfor %}
+                    {% endfor %}
+                    {% for error in form.non_field_errors %}
+                        <div>{{ error }}</div>
+                    {% endfor %}
+                </div>
+            {% endif %}
+
+            <form method="post" action="{% url 'contacto' %}" class="admin-create-form">
+                {% csrf_token %}
+                <div class="admin-create-grid">
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="{{ form.nombre.id_for_label }}">Nombre completo</label>
+                        {{ form.nombre }}
+                    </div>
+
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="{{ form.email.id_for_label }}">Correo electrónico</label>
+                        {{ form.email }}
+                    </div>
+
+                    <div class="admin-form-field admin-form-field-wide">
+                        <label for="{{ form.productoInteres.id_for_label }}">Producto de interés <span class="label-optional">(opcional)</span></label>
+                        {{ form.productoInteres }}
+                    </div>
+
+                    <div class="admin-form-field admin-form-field-wide">
+                        <label for="{{ form.mensaje.id_for_label }}">Mensaje o consulta <span class="label-optional">(mínimo 15 caracteres)</span></label>
+                        {{ form.mensaje }}
+                    </div>
+                </div>
+
+                <div class="admin-create-footer" style="justify-content: flex-end;">
+                    <a href="{% url 'lista' %}" class="btn-vaciar" style="width: auto; padding: 0.75rem 1.35rem; text-decoration: none;">
+                        Volver al catálogo
+                    </a>
+                    <button type="submit" class="btn-apple-primary">
+                        <span>Enviar consulta</span>
+                    </button>
+                </div>
+            </form>
+        </div>
+    </div>
+{% endblock %}

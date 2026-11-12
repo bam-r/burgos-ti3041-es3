@@ -8,11 +8,20 @@
     <section id="inicio" class="hero-section">
         <div class="hero-container">
             <div class="hero-copy">
-                <div class="hero-eyebrow">
-                    <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round">
-                        <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
-                    </svg>
-                    <span>Ferretería Industrial &middot; Edición Pro</span>
+                <div style="display: flex; align-items: center; flex-wrap: wrap; gap: 0.65rem; margin-bottom: 1.35rem;">
+                    <div class="hero-eyebrow" style="margin-bottom: 0;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <polygon points="13 2 3 14 12 14 11 22 21 10 12 10 13 2"></polygon>
+                        </svg>
+                        <span>Ferretería Industrial &middot; Edición Pro</span>
+                    </div>
+                    <div class="hero-eyebrow" style="margin-bottom: 0;">
+                        <svg width="13" height="13" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                            <path d="M1 12s4-8 11-8 11 8 11 8-4 8-11 8-11-8-11-8z"></path>
+                            <circle cx="12" cy="12" r="3"></circle>
+                        </svg>
+                        <span>Visitas: <strong>{{ visitas }}</strong></span>
+                    </div>
                 </div>
                 <h1 class="hero-title">Potencia industrial.<br>Precisión absoluta.</h1>
                 <p class="hero-subtitle">
@@ -32,7 +41,7 @@
                     </button>
                 </div>
 
-                <div class="hero-metrics">
+                <div class="hero-metrics" style="grid-template-columns: repeat(4, auto);">
                     <div>
                         <span class="hero-metric-value">{{ resumen.total }}</span>
                         <span class="hero-metric-label">Artículos en catálogo</span>
@@ -44,6 +53,10 @@
                     <div>
                         <span class="hero-metric-value">{{ resumen.categorias_count }}</span>
                         <span class="hero-metric-label">Especialidades técnicas</span>
+                    </div>
+                    <div>
+                        <span class="hero-metric-value">{{ visitas }}</span>
+                        <span class="hero-metric-label">Visitas a la página</span>
                     </div>
                 </div>
             </div>

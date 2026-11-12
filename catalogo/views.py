@@ -3,10 +3,11 @@ from django.db.models import Avg, Count, F, Sum
 from django.http import Http404, JsonResponse
 from django.shortcuts import get_object_or_404, render, redirect
 from django.views.decorators.csrf import csrf_exempt
-
-from .models import Producto, Usuario
+from .forms import ConsultaClienteForm
+from .models import Producto, Usuario, ConsultaCliente
 
 carrito = {} 
+visitas_pagina = 0
 
 
 def obtener_carrito():
@@ -104,6 +105,9 @@ def logout_view(request):
 
 
 def lista(request):
+    global visitas_pagina
+    visitas_pagina += 1
+
     usuario = usuario_actual(request)
     es_admin = usuario is not None and usuario.get('rol') == 'admin'
 
@@ -132,6 +136,7 @@ def lista(request):
         'sin_stock': sin_stock,
         'retirados': retirados,
         'categorias_count': len(categorias),
+        'visitas': visitas_pagina,
     }
 
     items_carrito = obtener_carrito()
@@ -142,6 +147,7 @@ def lista(request):
         'categorias': categorias,
         'destacados': destacados,
         'resumen': resumen,
+        'visitas': visitas_pagina,
         'carrito': items_carrito,
         'carrito_total': datos_carrito['precio_total'],
         'carrito_cantidad': datos_carrito['cantidad_total'],
@@ -586,5 +592,48 @@ def reactivar_usuario(request, usuario_id):
 
     return redirect(request.META.get('HTTP_REFERER', 'lista'))
 
+
+def crear_consulta(request):
+    mensaje_exito = None
+    
+    if request.method == 'POST':
+        form = ConsultaClienteForm(request.POST)
+        if form.is_valid(): 
+            form.save()   
+            mensaje_exito = "¡Tu consulta ha sido enviada con éxito!"
+            form = ConsultaClienteForm() 
+    else:
+        form = ConsultaClienteForm()
+
+    items_carrito = obtener_carrito()
+    datos_carrito = resumen_carrito(items_carrito)
+
+    return render(request, 'catalogo/contacto.html', {
+        'form': form,
+        'mensaje_exito': mensaje_exito,
+        'carrito': items_carrito,
+        'carrito_total': datos_carrito['precio_total'],
+        'carrito_cantidad': datos_carrito['cantidad_total'],
+        'usuario': usuario_actual(request),
+    })
+
+
+def solicitudes_admin(request):
+    usuario = usuario_actual(request)
+    if usuario is None or usuario.get('rol') != 'admin':
+        return redirect('login')
+
+    solicitudes = ConsultaCliente.objects.select_related('productoInteres').order_by('-fecha')
+    items_carrito = obtener_carrito()
+    datos_carrito = resumen_carrito(items_carrito)
+
+    return render(request, 'catalogo/solicitudes.html', {
+        'solicitudes': solicitudes,
+        'total_solicitudes': solicitudes.count(),
+        'carrito': items_carrito,
+        'carrito_total': datos_carrito['precio_total'],
+        'carrito_cantidad': datos_carrito['cantidad_total'],
+        'usuario': usuario,
+    })
 
 

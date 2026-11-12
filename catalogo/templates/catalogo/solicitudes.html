@@ -1,0 +1,77 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Solicitudes de Clientes — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <div class="detail-page-wrap">
+        <nav class="breadcrumb-nav" aria-label="Ruta de navegación">
+            <a href="{% url 'lista' %}">Inicio</a>
+            <span>/</span>
+            <span style="color: var(--text-primary); font-weight: 500;">Solicitudes de Clientes</span>
+        </nav>
+
+        <div class="section-headline" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2>Solicitudes Recibidas. <span>Consultas enviadas por los clientes ({{ total_solicitudes }}).</span></h2>
+            </div>
+            <a href="{% url 'lista' %}" class="btn-vaciar" style="width: auto; padding: 0.6rem 1.2rem; text-decoration: none;">
+                &larr; Volver al catálogo
+            </a>
+        </div>
+
+        <div class="admin-create-card">
+            <div class="admin-create-header">
+                <span class="admin-create-eyebrow">Bandeja de Consultas &middot; Administración</span>
+                <h3>Listado de Consultas de Clientes</h3>
+                <p>Revisa los mensajes, datos de contacto y productos de interés enviados desde el formulario de contacto.</p>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-hairline); color: var(--text-muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <th style="padding: 0.85rem 0.75rem;">Fecha</th>
+                            <th style="padding: 0.85rem 0.75rem;">Cliente</th>
+                            <th style="padding: 0.85rem 0.75rem;">Correo</th>
+                            <th style="padding: 0.85rem 0.75rem;">Producto de Interés</th>
+                            <th style="padding: 0.85rem 0.75rem;">Mensaje</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for solicitud in solicitudes %}
+                        <tr style="border-bottom: 1px solid var(--border-hairline); vertical-align: top;">
+                            <td style="padding: 0.95rem 0.75rem; color: var(--text-muted); white-space: nowrap; font-size: 0.8rem;">
+                                {{ solicitud.fecha|date:"d/m/Y H:i" }}
+                            </td>
+                            <td style="padding: 0.95rem 0.75rem; font-weight: 600; color: var(--text-primary); white-space: nowrap;">
+                                {{ solicitud.nombre }}
+                            </td>
+                            <td style="padding: 0.95rem 0.75rem; color: var(--text-secondary); white-space: nowrap;">
+                                {{ solicitud.email }}
+                            </td>
+                            <td style="padding: 0.95rem 0.75rem;">
+                                {% if solicitud.productoInteres %}
+                                    <a href="{% url 'detalle' solicitud.productoInteres.id %}" class="producto-categoria" style="display: inline-block;">
+                                        {{ solicitud.productoInteres.nombre }}
+                                    </a>
+                                {% else %}
+                                    <span style="color: var(--text-muted); font-size: 0.82rem;">Consulta general</span>
+                                {% endif %}
+                            </td>
+                            <td style="padding: 0.95rem 0.75rem; color: var(--text-primary); line-height: 1.5; max-width: 440px;">
+                                {{ solicitud.mensaje }}
+                            </td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 2rem; text-align: center; color: var(--text-muted);">
+                                Aún no se han recibido consultas de clientes.
+                            </td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

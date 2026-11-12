@@ -29,9 +29,10 @@
                 <li><a href="{% url 'lista' %}#inicio">Inicio</a></li>
                 <li><a href="{% url 'lista' %}#destacados">Ecosistema Pro</a></li>
                 <li><a href="{% url 'lista' %}#catalogo">Catálogo</a></li>
-                <li><a href="{% url 'lista' %}#especificaciones">Garantía & Envío</a></li>
+                <li><a href="{% url 'contacto' %}">Contacto</a></li>
                 {% if usuario and usuario.rol == 'admin' %}
                 <li><a href="{% url 'resumen' %}">Resumen</a></li>
+                <li><a href="{% url 'solicitudes' %}">Solicitudes</a></li>
                 {% endif %}
             </ul>
 
@@ -95,6 +96,11 @@
                 <span class="pulse-dot"></span>
                 <span><strong>Modo Administrador Activo:</strong> Creación de productos, control de stock y visibilidad habilitados en la página.</span>
             </div>
+            {% if visitas is not None %}
+            <div style="font-size: 0.76rem; color: #cbd5e1;">
+                Visitas al inicio: <strong>{{ visitas }}</strong>
+            </div>
+            {% endif %}
         </div>
     </div>
     {% endif %}

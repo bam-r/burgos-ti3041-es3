@@ -1,40 +1,31 @@
 Parte 1: *Registro de consultas*
 
-prompt: este proyecto ya es funcional, pero ahora debo integrar base de datos: no cambies nada del codigo primero quiero hablar esto
-en settings el docente me pide que agregue las configuraciones, pero django ya viene configurado con sqlite, hay que cambiar algo? tambien hay que cambiar que el software trabaje con el archivo json para que trabaje con la base de datos.
+prompt: esta hecho el models y el backend de los productos, necesito que agregues y conectes desde la sesion del admin un boton de edicion que permita cambiar
+la url de la foto, el nombre, el stock, la categoria, etc... debe ser que cuando presionas el boton de editar te lleve a una vista con formulario
+de edicion, tambien, agrega al html de la vista principal de administrador un formulario de agregar productos
 
-resumen respuesta: me explico lo que dbe hacerse cambio las settings y en settings.json lo cambio a system 
+resumen respuesta: agrego y creo el nuevo html con el formulario para editar productos
 
-prompt: crea los models usando como referencia los archivos json y luego yo hago la migracion
+prompt: cree un models de usuario y su backend con django, necesito que me ayudes a hacer mas robusto el login de la pagina, quiero que el login ya no sea solo poner tu nombre si no que revise tu user y contraseña de los usuarios en la base de datos al logear, tambien que te lleve a la ventana de admin o user segun tu rol.
 
-resumen respuesta: hizo el models en models.py
+resumen respuesta:  realizó los cambios del login
 
-prompt: crea un superusuario y registra el modelo en admin.py 
+prompt: ok, perfecto, ahora en la vista de admin, arriba en la navbar, cambia "administración" por "resumen" y que sea una nueva vista donde puedas ver datos como : la cantidad de articulos, el costo promedio, el stock por categoria y que estos calculos se realicen usando aggregate o annotate del orm de django, si algun calculo no se puede hacer con el orm, dimelo y vemos que hacer
 
-resumen respuesta: creo el super usuario, le puse contraseña y registro el modelo, luego entre en a /admin/ y probe que funcionara normal
+resumen respuesta: creo  resumen_admin.py en views.py donde calcula los calculos pedidos y los pide con un request
 
-prompt: que son los datos de mi variante y cuales son los mios y dime como cargo los datos
+prompt: cree un model llamado ConsultaCliente para que los clientes puedan consultar sobre productos, cree forms.py para crear el formulario por django y agregue alfinal en views.py una funcion con un metodo POST para enviar el formulario y que haga render de contacto.html
 
-resumen respuesta: es un json normal, me recomienda convertir los 40 registros en un fixture y luego cargarla con
-    .\.venv\Scripts\python.exe manage.py loaddata catalogo/fixtures/productos.json
+necesito que crees el archivo contacto html y sea una vista para el cliente y que tenga el formulario para ser enviado, que se pueda elegir producto opcionalmente y pida los datos que pide el formulario ya creado
 
-prompt: puedes convertir tu en un fixture los 40 registros para no tener que hacerlo manualmente?
+resumen respuesta: creo contacto.html registro la ruta y creo en views.py crear consulta y lo unio a contacto.html
 
-resumen respuesta: me paso el fixture ya hecho para ser cargados en sqlite
+prompt: por ultimo, en la vista de admin, necesito que en la navbar agregues "solicitudes" y que sea una vista donde se pueden ver las consultas que han enviados los clientes
 
-prompt: ya esta todo en sql ahora necesito que la vista traiga los datos desde la base de datos
-
-resumen respuesta: cambio el codigo en views y tuvo algunos fallos pero los arreglo la ia tambien
-
-prompt evaluacion 3: en esta carpeta tengo un proyecto de una tienda de ferreteria, el backend esta conectado a la base de datos y tiene imagenes por urls, y tiene un frontend un poco anticuado, con emotes poco profesional y con un sistema un poco raro.
-necesito que rehagas todo el frontend, que tenga una landing page que muestre articulos, con un login opcional, mucho mas moderno y mas completo, como referencia al estilo que me refiero puedes basarte en aplicaciones modernas como apple.com
-
-resumen respuesta:lo hizo 
+resumen respuesta: creo en views.py solicitudes_admin que consulta las entradas de el model consultaCliente
 --------------------------------------fin parte 1-------------------------------------------
 
 parte 2, *explicación del proceso*:
 
-esta vez hice todo desde github copilot porque al no entender al 100% todo lo que hace mi codigo, no senti que fuera algo que podia manejar sin que la ia sepa exactamente que archivos hay en mi proyecto, hable con ella y le explique lo que tenia que hacer ademas de pedir detalles sobre como funcionaba lo hecho, hubieron muchos errores por yo no conocer el codigo y por estar cambiando codigo ya hecho pero se resolvio.
-primero las settings fue muy facil y las migraciones tambien, no habia mucho que cambiar y el models al solo ser un modelo era muy simple de hacer, ejecutar la migracion fue sin ningun problema, la creación del superadmin no sabia como hacerla pero con la ia lo resolvimos y luego solo hubo que verificar en el proyecto que funcionara adecuadamente
-pasar los datos a fixture al principio no entendi a que se referia luego vi que es el standard para que sqlite reconozca el tipo de dato, asique la ia pasó todo a fixture y luego corri el script que sube los datos.
-lo dificil y que sinceramente yo no aporte nada porque no sabia ni por donde empezar ni que hacer es cambiar el codigo para que apunte a la base de datos y no al json, creo que desde 0 si sabria como traer los datos a la base de datos pero cambiar algo ya hecho, que además fue algo hecho por la ia era muy complejo.
+en esta tercera evaluacion tenia una base mucho mas solida de proyecto creada mas estable, y ya sabia manejarme con models, crear rutas con urls y hacer los metodos post get, etc... asique de esa forma realice lo relacionado a enviar y recibir datos desde la base de datos, para realizar el resto de la evaluación use la ia antigravity, que fue creando los htmls segun lo iba pidiendo y agregando algunas funcionalidades en views.py, al saber python y ya estar mas familiarizado con el backend, fue muy facil entender lo que estaba pasando en views.py para manejar los renders y las requests. 
+En cuanto al html y css, esta 100% hecho con ia y no creo que entienda todo lo que esta hecho. 
