@@ -1,0 +1,51 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Registrarse — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <section class="login-section">
+        <div class="login-caja">
+            <div class="login-icon-ring">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round">
+                    <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2"></path>
+                    <circle cx="8.5" cy="7" r="4"></circle>
+                    <line x1="20" y1="8" x2="20" y2="14"></line>
+                    <line x1="23" y1="11" x2="17" y2="11"></line>
+                </svg>
+            </div>
+
+            <h2>Crear cuenta en Incapas</h2>
+            <p class="login-subtitle">
+                Regístrate como usuario para explorar y realizar pedidos en la tienda.
+            </p>
+
+            {% if error %}
+                <p class="login-error">{{ error }}</p>
+            {% endif %}
+
+            <form method="post" action="{% url 'registro' %}" id="page-registro-form">
+                {% csrf_token %}
+                <input type="text" name="nombreCompleto" class="apple-input" placeholder="Nombre completo" maxlength="150" required autofocus>
+                <input type="text" name="user" class="apple-input" placeholder="Nombre de usuario" maxlength="100" required>
+                <input type="email" name="email" class="apple-input" placeholder="Correo electrónico" required>
+                <input type="password" name="contraseña" class="apple-input" placeholder="Contraseña" maxlength="100" required>
+                <button type="submit" class="btn-apple-primary" style="width: 100%; padding: 0.9rem;">
+                    <span>Registrarse</span>
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                        <line x1="5" y1="12" x2="19" y2="12"></line>
+                        <polyline points="12 5 19 12 12 19"></polyline>
+                    </svg>
+                </button>
+            </form>
+
+            <div style="margin-top: 1.5rem; padding-top: 1rem; border-top: 1px solid var(--border-hairline); display: flex; flex-direction: column; gap: 0.5rem;">
+                <a href="{% url 'login' %}" style="font-size: 0.85rem; color: var(--text-primary); font-weight: 600;">
+                    ¿Ya tienes cuenta? Inicia sesión
+                </a>
+                <a href="{% url 'lista' %}" style="font-size: 0.82rem; color: var(--text-secondary);">
+                    Continuar explorando como invitado &rarr;
+                </a>
+            </div>
+        </div>
+    </section>
+{% endblock %}

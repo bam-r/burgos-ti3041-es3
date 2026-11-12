@@ -285,7 +285,11 @@
                 <div class="segmented-control" role="group" aria-label="Filtro de disponibilidad">
                     <button type="button" class="seg-btn active" data-stock-filter="all" onclick="setStockFilter('all', this)">Todos</button>
                     <button type="button" class="seg-btn" data-stock-filter="instock" onclick="setStockFilter('instock', this)">Disponibles ({{ resumen.disponibles }})</button>
+                    <button type="button" class="seg-btn" data-stock-filter="lowstock" onclick="setStockFilter('lowstock', this)">Stock bajo ({{ resumen.stock_bajo }})</button>
                     <button type="button" class="seg-btn" data-stock-filter="outofstock" onclick="setStockFilter('outofstock', this)">Sin stock ({{ resumen.sin_stock }})</button>
+                    {% if usuario and usuario.rol == 'admin' %}
+                    <button type="button" class="seg-btn" data-stock-filter="retired" onclick="setStockFilter('retired', this)">Retirados ({{ resumen.retirados }})</button>
+                    {% endif %}
                 </div>
 
                 <select id="catalog-sort" class="sort-select" onchange="applyCatalogFilters()" aria-label="Ordenar productos">
@@ -474,13 +478,16 @@
                 const nombre = card.getAttribute('data-nombre') || '';
                 const categoria = card.getAttribute('data-categoria') || '';
                 const stock = parseInt(card.getAttribute('data-stock') || '0', 10);
+                const activo = card.getAttribute('data-activo') === '1';
 
                 const matchesCat = (currentCategory === 'all') || (categoria === currentCategory);
                 const matchesSearch = !query || nombre.includes(query) || categoria.toLowerCase().includes(query);
 
                 let matchesStock = true;
-                if (currentStockFilter === 'instock') matchesStock = stock > 0;
+                if (currentStockFilter === 'instock') matchesStock = activo && stock > 0;
+                if (currentStockFilter === 'lowstock') matchesStock = activo && stock > 0 && stock <= 5;
                 if (currentStockFilter === 'outofstock') matchesStock = stock === 0;
+                if (currentStockFilter === 'retired') matchesStock = !activo;
 
                 if (matchesCat && matchesSearch && matchesStock) {
                     card.style.display = '';

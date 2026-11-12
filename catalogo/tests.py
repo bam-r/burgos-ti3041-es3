@@ -2,7 +2,7 @@ from django.test import TestCase
 from django.contrib.auth import get_user_model
 from django.urls import reverse
 
-from .models import Producto
+from .models import Producto, Usuario
 
 
 class ProductoAdminCRUDTests(TestCase):
@@ -177,4 +177,45 @@ class CatalogoDatabaseViewsTests(TestCase):
 		response = self.client.get(reverse('detalle', args=[self.producto.pk]))
 		self.assertEqual(response.status_code, 200)
 		self.assertContains(response, 'Producto solo en SQLite')
+
+	def test_login_con_modelo_usuario_y_roles(self):
+		self.client.cookies.clear()
+		Usuario.objects.create(
+			nombreCompleto='Admin Prueba',
+			user='admin_db',
+			contraseña='clave_admin',
+			email='admin_db@example.com',
+			activo=True,
+			rol='admin',
+		)
+		Usuario.objects.create(
+			nombreCompleto='Usuario Prueba',
+			user='user_db',
+			contraseña='clave_user',
+			email='user_db@example.com',
+			activo=True,
+			rol='usuario',
+		)
+
+		# Login como rol 'admin'
+		response = self.client.post(reverse('login'), {
+			'user': 'admin_db',
+			'contraseña': 'clave_admin',
+		})
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response.cookies['rol_usuario'].value, 'admin')
+		home_admin = self.client.get(reverse('lista'))
+		self.assertContains(home_admin, 'Modo Administrador Activo')
+
+		# Login como rol 'usuario'
+		response = self.client.post(reverse('login'), {
+			'user': 'user_db',
+			'contraseña': 'clave_user',
+		})
+		self.assertEqual(response.status_code, 302)
+		self.assertEqual(response.cookies['rol_usuario'].value, 'usuario')
+		home_user = self.client.get(reverse('lista'))
+		self.assertNotContains(home_user, 'Modo Administrador Activo')
+		self.assertContains(home_user, 'Usuario Prueba')
+
 

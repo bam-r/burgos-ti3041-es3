@@ -1,0 +1,20 @@
+[
+  {
+    "id": 1,
+    "nombreCompleto": "Administrador Incapas",
+    "user": "admin",
+    "contraseña": "admin123",
+    "email": "admin@incapas.cl",
+    "activo": true,
+    "rol": "admin"
+  },
+  {
+    "id": 2,
+    "nombreCompleto": "Cliente Incapas",
+    "user": "usuario",
+    "contraseña": "1234",
+    "email": "usuario@incapas.cl",
+    "activo": true,
+    "rol": "usuario"
+  }
+]

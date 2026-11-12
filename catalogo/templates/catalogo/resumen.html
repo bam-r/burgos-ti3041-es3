@@ -1,0 +1,80 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Resumen de Catálogo — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <div class="detail-page-wrap">
+        <nav class="breadcrumb-nav" aria-label="Ruta de navegación">
+            <a href="{% url 'lista' %}">Inicio</a>
+            <span>/</span>
+            <span style="color: var(--text-primary); font-weight: 500;">Resumen de Administración</span>
+        </nav>
+
+        <div class="section-headline" style="display: flex; justify-content: space-between; align-items: flex-end; flex-wrap: wrap; gap: 1rem;">
+            <div>
+                <h2>Resumen General. <span>Métricas calculadas con ORM (aggregate &amp; annotate).</span></h2>
+            </div>
+            <a href="{% url 'lista' %}" class="btn-vaciar" style="width: auto; padding: 0.6rem 1.2rem; text-decoration: none;">
+                &larr; Volver al catálogo
+            </a>
+        </div>
+
+        <!-- KPIs Generales (ORM aggregate) -->
+        <div class="detail-specs-bento" style="grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); margin-bottom: 2.5rem;">
+            <div class="spec-tile">
+                <span class="spec-tile-label">Cantidad de Artículos</span>
+                <span class="spec-tile-value" style="font-size: 1.75rem; font-weight: 800;">{{ metricas.cantidad_articulos }}</span>
+            </div>
+            <div class="spec-tile">
+                <span class="spec-tile-label">Unidades Totales en Stock</span>
+                <span class="spec-tile-value" style="font-size: 1.75rem; font-weight: 800;">{{ metricas.stock_total }}</span>
+            </div>
+            <div class="spec-tile">
+                <span class="spec-tile-label">Costo / Precio Promedio</span>
+                <span class="spec-tile-value js-price" data-price="{{ metricas.costo_promedio }}" style="font-size: 1.75rem; font-weight: 800;">${{ metricas.costo_promedio }}</span>
+            </div>
+            <div class="spec-tile">
+                <span class="spec-tile-label">Valorización de Stock Actual</span>
+                <span class="spec-tile-value js-price" data-price="{{ metricas.valor_inventario }}" style="font-size: 1.75rem; font-weight: 800;">${{ metricas.valor_inventario }}</span>
+            </div>
+        </div>
+
+        <!-- Desglose por Categoría (ORM values + annotate) -->
+        <div class="admin-create-card">
+            <div class="admin-create-header">
+                <span class="admin-create-eyebrow">Agrupación ORM &middot; values('categoria').annotate(...)</span>
+                <h3>Stock y Métricas por Categoría</h3>
+                <p>Resumen de artículos, unidades disponibles, costo promedio y valorización agrupados por categoría.</p>
+            </div>
+
+            <div style="overflow-x: auto;">
+                <table style="width: 100%; border-collapse: collapse; font-size: 0.88rem; text-align: left;">
+                    <thead>
+                        <tr style="border-bottom: 1px solid var(--border-hairline); color: var(--text-muted); font-size: 0.74rem; text-transform: uppercase; letter-spacing: 0.05em;">
+                            <th style="padding: 0.85rem 0.75rem;">Categoría</th>
+                            <th style="padding: 0.85rem 0.75rem;">Artículos</th>
+                            <th style="padding: 0.85rem 0.75rem;">Stock Total</th>
+                            <th style="padding: 0.85rem 0.75rem;">Costo Promedio</th>
+                            <th style="padding: 0.85rem 0.75rem;">Valorización en Stock</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for item in por_categoria %}
+                        <tr style="border-bottom: 1px solid var(--border-hairline);">
+                            <td style="padding: 0.9rem 0.75rem; font-weight: 600; color: var(--text-primary);">{{ item.categoria }}</td>
+                            <td style="padding: 0.9rem 0.75rem; color: var(--text-secondary);">{{ item.cantidad_articulos }}</td>
+                            <td style="padding: 0.9rem 0.75rem; font-weight: 600; color: var(--text-primary);">{{ item.stock_categoria }} u.</td>
+                            <td style="padding: 0.9rem 0.75rem; color: var(--text-secondary);" class="js-price" data-price="{{ item.costo_promedio|floatformat:0 }}">${{ item.costo_promedio|floatformat:0 }}</td>
+                            <td style="padding: 0.9rem 0.75rem; font-weight: 600; color: var(--text-primary);" class="js-price" data-price="{{ item.valor_categoria }}">${{ item.valor_categoria }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" style="padding: 1.5rem; text-align: center; color: var(--text-muted);">No hay productos registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+{% endblock %}

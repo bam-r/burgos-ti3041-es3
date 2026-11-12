@@ -31,7 +31,7 @@
                 <li><a href="{% url 'lista' %}#catalogo">Catálogo</a></li>
                 <li><a href="{% url 'lista' %}#especificaciones">Garantía & Envío</a></li>
                 {% if usuario and usuario.rol == 'admin' %}
-                <li><a href="{% url 'lista' %}#panel-admin">Administración</a></li>
+                <li><a href="{% url 'resumen' %}">Resumen</a></li>
                 {% endif %}
             </ul>
 
@@ -66,6 +66,8 @@
                         <strong>{{ usuario.nombre }}</strong>
                         {% if usuario.rol == 'admin' %}
                             <span class="user-role-badge">Admin</span>
+                        {% else %}
+                            <span class="user-role-badge">Usuario</span>
                         {% endif %}
                         <a href="{% url 'logout' %}" class="nav-logout-link" title="Cerrar sesión">Salir</a>
                     </div>
@@ -77,6 +79,9 @@
                         </svg>
                         <span>Iniciar sesión</span>
                     </button>
+                    <a href="{% url 'registro' %}" class="nav-icon-btn nav-bag-btn">
+                        <span>Registrarse</span>
+                    </a>
                 {% endif %}
             </div>
         </div>
@@ -238,27 +243,20 @@
                 </div>
                 <h3 style="margin: 0 0 0.35rem; font-size: 1.45rem; font-weight: 700; letter-spacing: -0.02em;">Inicia sesión en Incapas</h3>
                 <p style="margin: 0 0 1.5rem; font-size: 0.86rem; color: var(--text-secondary);">
-                    El inicio de sesión es opcional. Identifícate como cliente o ingresa <strong>admin</strong> para gestionar el inventario.
+                    Ingresa tus credenciales para acceder a tu cuenta.
                 </p>
             </div>
-            <form method="post" action="{% url 'login' %}">
+            <form method="post" action="{% url 'login' %}" style="display: flex; flex-direction: column; gap: 0.65rem;">
                 {% csrf_token %}
                 <input type="hidden" name="next" value="{{ request.path }}">
-                <input type="text" id="modal-usuario-input" name="usuario" class="apple-input" placeholder="Tu nombre o 'admin'" required>
-                <button type="submit" class="btn-apple-primary" style="width: 100%; margin-top: 0.5rem;">Continuar</button>
+                <input type="text" id="modal-usuario-input" name="user" class="apple-input" placeholder="Usuario" required>
+                <input type="password" id="modal-password-input" name="contraseña" class="apple-input" placeholder="Contraseña" required>
+                <button type="submit" class="btn-apple-primary" style="width: 100%; margin-top: 0.25rem;">Iniciar sesión</button>
             </form>
-            <div class="quick-roles-box">
-                <span class="quick-roles-title">Acceso rápido con un clic</span>
-                <div class="quick-roles-grid">
-                    <button type="button" class="quick-role-btn" onclick="submitQuickRole('Cliente Pro')">
-                        <strong>Cliente Pro</strong>
-                        <span>Vista comprador</span>
-                    </button>
-                    <button type="button" class="quick-role-btn" onclick="submitQuickRole('admin')">
-                        <strong>Administrador</strong>
-                        <span>Gestión de stock</span>
-                    </button>
-                </div>
+            <div style="margin-top: 1.25rem; padding-top: 1rem; border-top: 1px solid var(--border-hairline); text-align: center;">
+                <a href="{% url 'registro' %}" style="font-size: 0.84rem; font-weight: 600; color: var(--text-primary);">
+                    ¿No tienes cuenta? Regístrate aquí &rarr;
+                </a>
             </div>
         </div>
     </div>
@@ -299,14 +297,14 @@
                     </ul>
                 </div>
                 <div class="footer-col">
-                    <h5>Cuenta y Gestión</h5>
+                    <h5>Cuenta</h5>
                     <ul>
                         {% if usuario %}
                             <li><span>Conectado como <strong>{{ usuario.nombre }}</strong></span></li>
                             <li><a href="{% url 'logout' %}">Cerrar sesión</a></li>
                         {% else %}
-                            <li><a href="{% url 'login' %}">Iniciar sesión (Opcional)</a></li>
-                            <li><a href="#" onclick="toggleLoginModal(true); return false;">Acceso Administrador</a></li>
+                            <li><a href="{% url 'login' %}">Iniciar sesión</a></li>
+                            <li><a href="{% url 'registro' %}">Registrarse</a></li>
                         {% endif %}
                     </ul>
                 </div>
@@ -351,14 +349,6 @@
                 if (input) setTimeout(() => input.focus(), 100);
             } else {
                 modal.classList.remove('open');
-            }
-        }
-
-        function submitQuickRole(roleName) {
-            const input = document.getElementById('modal-usuario-input');
-            if (input && input.form) {
-                input.value = roleName;
-                input.form.submit();
             }
         }
 

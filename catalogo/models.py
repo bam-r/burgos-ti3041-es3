@@ -14,3 +14,15 @@ class Producto(models.Model):
 
 	def __str__(self):
 		return self.nombre
+
+class Usuario(models.Model):
+	nombreCompleto = models.CharField(max_length=150)
+	user = models.CharField(max_length=100)
+	contraseña = models.CharField(max_length=100)
+	email = models.EmailField()
+	activo = models.BooleanField(default=True)
+	rol = models.CharField(max_length=50, default='usuario')
+
+
+	def __str__(self):
+		return self.user

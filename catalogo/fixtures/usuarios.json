@@ -1,0 +1,26 @@
+[
+  {
+    "model": "catalogo.usuario",
+    "pk": 1,
+    "fields": {
+      "nombreCompleto": "Administrador Incapas",
+      "user": "admin",
+      "contraseña": "admin123",
+      "email": "admin@incapas.cl",
+      "activo": true,
+      "rol": "admin"
+    }
+  },
+  {
+    "model": "catalogo.usuario",
+    "pk": 2,
+    "fields": {
+      "nombreCompleto": "Cliente Incapas",
+      "user": "usuario",
+      "contraseña": "1234",
+      "email": "usuario@incapas.cl",
+      "activo": true,
+      "rol": "usuario"
+    }
+  }
+]

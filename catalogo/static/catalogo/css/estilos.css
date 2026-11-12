@@ -877,6 +877,7 @@ button, input, select {
 
 .segmented-control {
     display: inline-flex;
+    flex-wrap: wrap;
     background: #f1f5f9;
     padding: 0.22rem;
     border-radius: var(--radius-pill);
