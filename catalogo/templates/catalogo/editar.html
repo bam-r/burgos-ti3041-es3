@@ -1,0 +1,92 @@
+{% extends 'catalogo/base.html' %}
+
+{% block titulo %}Editar {{ producto.nombre }} — Incapas Pro{% endblock %}
+
+{% block contenido %}
+    <div class="detail-page-wrap" style="max-width: 760px;">
+        <nav class="breadcrumb-nav" aria-label="Ruta de navegación">
+            <a href="{% url 'lista' %}">Inicio</a>
+            <span>/</span>
+            <a href="{% url 'detalle' producto.id %}">{{ producto.nombre }}</a>
+            <span>/</span>
+            <span style="color: var(--text-primary); font-weight: 500;">Editar artículo</span>
+        </nav>
+
+        <div class="admin-create-card">
+            <div class="admin-create-header">
+                <span class="admin-create-eyebrow">Edición de Artículo &middot; ID #{{ producto.id }}</span>
+                <h3>Editar: {{ producto.nombre }}</h3>
+                <p>Modifica el nombre, categoría, precio, stock, URL de la foto o estado del producto.</p>
+            </div>
+
+            {% if error %}
+                <p class="login-error">{{ error }}</p>
+            {% endif %}
+
+            <form method="post" action="{% url 'editar_producto' producto.id %}" class="admin-create-form" onsubmit="prepareReturnScroll(true)">
+                {% csrf_token %}
+                <div class="admin-create-grid">
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="edit-nombre">Nombre del producto</label>
+                        <input type="text" id="edit-nombre" name="nombre" class="apple-input" value="{{ producto.nombre }}" maxlength="150" required>
+                    </div>
+
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="edit-categoria">Categoría</label>
+                        <input type="text" id="edit-categoria" name="categoria" list="categorias-editar" class="apple-input" value="{{ producto.categoria }}" maxlength="100" required>
+                        <datalist id="categorias-editar">
+                            {% for cat in categorias %}
+                            <option value="{{ cat }}"></option>
+                            {% endfor %}
+                        </datalist>
+                    </div>
+
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="edit-precio">Precio (CLP)</label>
+                        <input type="number" id="edit-precio" name="precio" class="apple-input" value="{{ producto.precio }}" min="0" step="1" required>
+                    </div>
+
+                    <div class="admin-form-field" style="grid-column: span 2;">
+                        <label for="edit-stock">Stock disponible</label>
+                        <input type="number" id="edit-stock" name="stock" class="apple-input" value="{{ producto.stock }}" min="0" step="1" required>
+                    </div>
+
+                    <div class="admin-form-field admin-form-field-wide">
+                        <label for="edit-imagen">URL o ruta de la foto</label>
+                        <input type="text" id="edit-imagen" name="imagen" class="apple-input" value="{{ producto.imagen }}" placeholder="/static/catalogo/img/sin-imagen.jpg" maxlength="255">
+                    </div>
+                </div>
+
+                <div class="admin-create-footer">
+                    <label class="admin-checkbox-wrap">
+                        <input type="checkbox" name="activo" {% if producto.activo %}checked{% endif %}>
+                        <span>Producto activo y visible en el catálogo</span>
+                    </label>
+                    <div style="display: flex; align-items: center; gap: 0.65rem;">
+                        <a href="{% url 'lista' %}" class="btn-vaciar" style="width: auto; padding: 0.75rem 1.35rem; text-decoration: none;" onclick="prepareReturnScroll(false)">
+                            Cancelar
+                        </a>
+                        <button type="submit" class="btn-apple-primary">
+                            <span>Guardar cambios</span>
+                        </button>
+                    </div>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <script>
+        function prepareReturnScroll(saved) {
+            const editScroll = sessionStorage.getItem('incapas_edit_scroll_y');
+            if (editScroll !== null) {
+                sessionStorage.setItem('incapas_scroll_y', editScroll);
+                sessionStorage.removeItem('incapas_edit_scroll_y');
+            } else {
+                sessionStorage.setItem('incapas_scroll_target_id', 'producto-{{ producto.id }}');
+            }
+            if (saved) {
+                sessionStorage.setItem('incapas_action_msg', 'Producto actualizado correctamente');
+            }
+        }
+    </script>
+{% endblock %}

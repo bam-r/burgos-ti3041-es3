@@ -139,6 +139,35 @@ class CatalogoDatabaseViewsTests(TestCase):
 		self.assertEqual(nuevo.imagen, '/static/catalogo/img/sin-imagen.jpg')
 		self.assertTrue(nuevo.activo)
 
+	def test_admin_puede_editar_producto_desde_vista_editar(self):
+		self.client.cookies['nombre_usuario'] = 'admin'
+		self.client.cookies['rol_usuario'] = 'admin'
+
+		edit_url = reverse('editar_producto', args=[self.producto.pk])
+		response = self.client.get(edit_url)
+		self.assertEqual(response.status_code, 200)
+		self.assertContains(response, self.producto.nombre)
+
+		response = self.client.post(
+			edit_url,
+			{
+				'nombre': 'Producto editado desde admin web',
+				'categoria': 'Herramientas manuales',
+				'precio': '9990',
+				'stock': '25',
+				'imagen': '/static/catalogo/img/martillocar.jpg',
+				'activo': 'on',
+			},
+		)
+		self.assertEqual(response.status_code, 302)
+		self.producto.refresh_from_db()
+		self.assertEqual(self.producto.nombre, 'Producto editado desde admin web')
+		self.assertEqual(self.producto.categoria, 'Herramientas manuales')
+		self.assertEqual(self.producto.precio, 9990)
+		self.assertEqual(self.producto.stock, 25)
+		self.assertEqual(self.producto.imagen, '/static/catalogo/img/martillocar.jpg')
+		self.assertTrue(self.producto.activo)
+
 	def test_acceso_invitado_sin_login_opcional(self):
 		self.client.cookies.clear()
 		response = self.client.get(reverse('lista'))

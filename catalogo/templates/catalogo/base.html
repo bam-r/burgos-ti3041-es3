@@ -386,12 +386,19 @@
 
             // Restore scroll position & show feedback after POST actions
             const savedScroll = sessionStorage.getItem('incapas_scroll_y');
+            const savedTargetId = sessionStorage.getItem('incapas_scroll_target_id');
             const savedAction = sessionStorage.getItem('incapas_action_msg');
             const reopenBag = sessionStorage.getItem('incapas_reopen_bag');
 
             if (savedScroll !== null) {
                 window.scrollTo({ top: parseInt(savedScroll, 10), behavior: 'instant' });
                 sessionStorage.removeItem('incapas_scroll_y');
+            } else if (savedTargetId) {
+                const targetEl = document.getElementById(savedTargetId);
+                if (targetEl) {
+                    targetEl.scrollIntoView({ behavior: 'instant', block: 'center' });
+                }
+                sessionStorage.removeItem('incapas_scroll_target_id');
             }
             if (savedAction) {
                 showToast(savedAction);

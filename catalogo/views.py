@@ -259,3 +259,54 @@ def agregar_producto(request):
 
     return redirect(request.META.get('HTTP_REFERER', 'lista'))
 
+
+def editar_producto(request, producto_id):
+    usuario = usuario_actual(request)
+    if usuario is None or usuario['rol'] != 'admin':
+        return redirect('login')
+
+    producto = get_object_or_404(Producto, pk=producto_id)
+    error = None
+
+    if request.method == 'POST':
+        nombre = request.POST.get('nombre', '').strip()
+        categoria = request.POST.get('categoria', '').strip()
+        imagen = request.POST.get('imagen', '').strip() or '/static/catalogo/img/sin-imagen.jpg'
+        activo = request.POST.get('activo') in ('on', 'true', '1', True)
+
+        try:
+            precio = int(request.POST.get('precio', -1))
+            stock = int(request.POST.get('stock', -1))
+        except ValueError:
+            precio = -1
+            stock = -1
+
+        if nombre and categoria and precio >= 0 and stock >= 0:
+            producto.nombre = nombre
+            producto.categoria = categoria
+            producto.precio = precio
+            producto.stock = stock
+            producto.imagen = imagen
+            producto.activo = activo
+            producto.save()
+            return redirect('lista')
+        error = 'Verifica que todos los campos obligatorios tengan valores válidos.'
+
+    categorias = list(
+        Producto.objects.values_list('categoria', flat=True).distinct()
+    )
+    items_carrito = obtener_carrito()
+    datos_carrito = resumen_carrito(items_carrito)
+
+    contexto = {
+        'producto': producto,
+        'categorias': categorias,
+        'error': error,
+        'carrito': items_carrito,
+        'carrito_total': datos_carrito['precio_total'],
+        'carrito_cantidad': datos_carrito['cantidad_total'],
+        'usuario': usuario,
+    }
+    return render(request, 'catalogo/editar.html', contexto)
+
+
